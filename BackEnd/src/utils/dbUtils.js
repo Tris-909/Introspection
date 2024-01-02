@@ -61,7 +61,17 @@ export const readDocs = async ({ collectionName, conditions }) => {
 export const updateDocById = async ({ collectionName, id, data }) => {
   try {
     // if { data } is an object contains field with new value it will update that field with new value
-    await firestore.collection(collectionName).doc(id).update(data);
+    await firestore
+      .collection(collectionName)
+      .doc(id)
+      .update({
+        ...data,
+        updatedAt: Date.now(),
+      });
+
+    const doc = await readDocById({ collectionName, id });
+
+    return doc;
   } catch (error) {
     throw new Error(error);
   }

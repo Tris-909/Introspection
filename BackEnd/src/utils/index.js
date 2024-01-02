@@ -1,4 +1,4 @@
 import { returnResponse } from "./response.js";
-import { createDoc, readDocById } from "./dbUtils.js";
+import { createDoc, readDocById, updateDocById } from "./dbUtils.js";
 
-export { returnResponse, createDoc, readDocById };
+export { returnResponse, createDoc, readDocById, updateDocById };

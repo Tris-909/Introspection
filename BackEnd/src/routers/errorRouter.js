@@ -1,8 +1,8 @@
 import express from "express";
-import { param, checkSchema } from "express-validator";
+import { param, checkSchema, checkExact } from "express-validator";
 import { returnResponse } from "../utils";
-import { createError, readError } from "../controllers/error";
-import { createSchemaCheck } from "../validations/errors";
+import { createError, readError, patchError } from "../controllers/error";
+import { createSchemaCheck, updateSchemaCheck } from "../validations/errors";
 import { validate } from "../validations";
 import { constructInvalidFormatErrorMsg } from "../validations/shared";
 
@@ -66,62 +66,36 @@ errorRouter.get(
   }
 );
 
-// errorRouter.patch(
-//   "/:id",
-//   param("id").isUUID(4).withMessage("id provided is not a valid uuid"),
-//   checkSchema(
-//     {
-//       title: {
-//         exists: {
-//           options: true,
-//           errorMessage: "title is required in the body",
-//         },
-//         isString: {
-//           options: true,
-//           errorMessage: "title type required to be STRING",
-//         },
-//       },
-//       description: {
-//         exists: {
-//           options: true,
-//           errorMessage: "description is required in the body",
-//         },
-//         isString: {
-//           options: true,
-//           errorMessage: "description type required to be STRING",
-//         },
-//       },
-//       tags: {
-//         exists: {
-//           options: true,
-//           errorMessage: "tags is required in the body",
-//         },
-//         isArray: {
-//           options: true,
-//           errorMessage: "description type required to be ARRAY",
-//         },
-//       },
-//     },
-//     ["body"]
-//   ),
-//   async (req, res, next) => {
-//     try {
-//       const errorID = req.params.id;
+errorRouter.patch(
+  "/:id",
+  param("id")
+    .isUUID(4)
+    .withMessage(
+      constructInvalidFormatErrorMsg({ fieldName: "id", format: "uuid" })
+    ),
+  checkExact(checkSchema(updateSchemaCheck(), ["body"])),
+  async (req, res, next) => {
+    try {
+      validate(req);
+      const errorID = req.params.id;
+      const data = req.body;
 
-//       return res
-//         .status(200)
-//         .send(
-//           returnResponse(
-//             error,
-//             `Successfully fetched an error with ID ${errorID}`
-//           )
-//         );
-//     } catch (error) {
-//       if (Array.isArray(error?.errors)) {
-//         return res.status(error.statusCode).send({ errors: error.errors });
-//       }
+      const error = await patchError({ id: errorID, data: data });
 
-//       next(error);
-//     }
-//   }
-// );
+      return res
+        .status(200)
+        .send(
+          returnResponse(
+            error,
+            `Successfully updated an error with ID ${errorID}`
+          )
+        );
+    } catch (error) {
+      if (Array.isArray(error?.errors)) {
+        return res.status(error.statusCode).send({ errors: error.errors });
+      }
+
+      next(error);
+    }
+  }
+);
