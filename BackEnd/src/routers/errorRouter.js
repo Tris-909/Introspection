@@ -1,7 +1,12 @@
 import express from "express";
 import { param, checkSchema, checkExact } from "express-validator";
 import { returnResponse } from "../utils";
-import { createError, readError, patchError } from "../controllers/error";
+import {
+  createError,
+  readError,
+  patchError,
+  deleteError,
+} from "../controllers/error";
 import { createSchemaCheck, updateSchemaCheck } from "../validations/errors";
 import { validate } from "../validations";
 import { constructInvalidFormatErrorMsg } from "../validations/shared";
@@ -89,6 +94,34 @@ errorRouter.patch(
             error,
             `Successfully updated an error with ID ${errorID}`
           )
+        );
+    } catch (error) {
+      if (Array.isArray(error?.errors)) {
+        return res.status(error.statusCode).send({ errors: error.errors });
+      }
+
+      next(error);
+    }
+  }
+);
+
+errorRouter.delete(
+  "/:id",
+  param("id")
+    .isUUID(4)
+    .withMessage(
+      constructInvalidFormatErrorMsg({ fieldName: "id", format: "uuid" })
+    ),
+  async (req, res, next) => {
+    try {
+      validate(req);
+      const errorID = req.params.id;
+      await deleteError({ id: errorID });
+
+      return res
+        .status(200)
+        .send(
+          returnResponse({}, `Successfully deleted an error with ID ${errorID}`)
         );
     } catch (error) {
       if (Array.isArray(error?.errors)) {
