@@ -2,3 +2,8 @@
 
 - Express App Scaffold set up [Link](https://blog.logrocket.com/how-to-set-up-node-typescript-express/)
 - Setting up BackEnd to work with Firebase and create any object in error collection to test the connection
+
+# Problems need to be tackled
+
+- Import need to have `.js` extension at the end
+- validators are not flexible at the moment

@@ -4,6 +4,7 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { errorRouter } from "./routers/errorRouter.js";
+import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use("/error", errorRouter);
 
+app.use(errorMiddleware);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
