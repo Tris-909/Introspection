@@ -1,19 +1,20 @@
-import { firestore } from "../../databases/firebase.js";
 import { randomUUID } from "crypto";
+import { createDoc } from "../../utils";
+import { collectionNames } from "../../databases/firebase";
 
 export const createError = async ({ title, description, tags }) => {
-  const currentUUID = randomUUID();
-  const error = firestore.doc(`errors/${currentUUID}`);
-
   const errorEntity = {
-    id: currentUUID,
+    id: randomUUID(),
     title: title,
     description: description,
     tags: tags,
     createdAt: Date.now(),
   };
 
-  await error.set(errorEntity);
+  await createDoc({
+    collectionName: collectionNames.ERROR_COLLECTION,
+    data: errorEntity,
+  });
 
   return errorEntity;
 };

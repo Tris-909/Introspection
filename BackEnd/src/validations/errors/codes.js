@@ -1,4 +1,4 @@
-import { universalValidationCodes } from "../universalCodes.js";
+import { universalValidationCodes } from "../shared/universalCodes.js";
 
 export const errorValidationCodes = {
   ...universalValidationCodes,

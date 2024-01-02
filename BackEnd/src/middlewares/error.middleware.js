@@ -1,4 +1,4 @@
-import { universalValidationCodes } from "../validations/universalCodes.js";
+import { universalValidationCodes } from "../validations/shared/universalCodes.js";
 
 export const errorMiddleware = (error, req, res, next) => {
   if (error) {

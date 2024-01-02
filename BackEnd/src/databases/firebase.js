@@ -22,4 +22,8 @@ const app = admin.initializeApp(
   "Introspection"
 );
 
+export const collectionNames = {
+  ERROR_COLLECTION: "errors",
+};
+
 export const firestore = getFirestore(app);

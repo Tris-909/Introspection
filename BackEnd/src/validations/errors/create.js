@@ -1,23 +1,76 @@
-import { errorValidationCodes } from "./codes.js";
-import { validationResult } from "express-validator";
+import {
+  constructInvalidTypeErrorMsg,
+  constructMissingFieldErrorMsg,
+} from "../shared";
+import { errorValidationCodes } from "./codes";
 
-export const validateCreateError = (req) => {
-  const result = validationResult(req);
-  const returnErrorCodes = [];
-
-  if (result.errors.length > 0) {
-    for (let i = 0; i < result.errors.length; i++) {
-      returnErrorCodes.push({
-        code: errorValidationCodes.INVALID_REQUEST_BODY,
-        message: result.errors[i].msg,
-      });
-    }
-  }
-
-  if (returnErrorCodes.length > 0) {
-    throw {
-      statusCode: 400,
-      errors: returnErrorCodes,
-    };
-  }
+export const createSchemaCheck = () => {
+  return {
+    title: {
+      exists: {
+        options: true,
+        errorMessage: {
+          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          msg: constructMissingFieldErrorMsg({
+            fieldName: "title",
+            location: "body",
+          }),
+        },
+      },
+      isString: {
+        options: true,
+        errorMessage: {
+          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          msg: constructInvalidTypeErrorMsg({
+            fieldName: "title",
+            type: "String",
+          }),
+        },
+      },
+    },
+    description: {
+      exists: {
+        options: true,
+        errorMessage: {
+          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          msg: constructMissingFieldErrorMsg({
+            fieldName: "description",
+            location: "body",
+          }),
+        },
+      },
+      isString: {
+        options: true,
+        errorMessage: {
+          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          msg: constructInvalidTypeErrorMsg({
+            fieldName: "description",
+            type: "String",
+          }),
+        },
+      },
+    },
+    tags: {
+      exists: {
+        options: true,
+        errorMessage: {
+          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          msg: constructMissingFieldErrorMsg({
+            fieldName: "tags",
+            location: "body",
+          }),
+        },
+      },
+      isArray: {
+        options: true,
+        errorMessage: {
+          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          msg: constructInvalidTypeErrorMsg({
+            fieldName: "tags",
+            location: "Array",
+          }),
+        },
+      },
+    },
+  };
 };
