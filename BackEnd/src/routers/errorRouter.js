@@ -31,10 +31,6 @@ errorRouter.post(
           )
         );
     } catch (error) {
-      if (Array.isArray(error?.errors)) {
-        return res.status(error.statusCode).send({ errors: error.errors });
-      }
-
       next(error);
     }
   }
@@ -62,10 +58,6 @@ errorRouter.get(
           )
         );
     } catch (error) {
-      if (Array.isArray(error?.errors)) {
-        return res.status(error.statusCode).send({ errors: error.errors });
-      }
-
       next(error);
     }
   }
@@ -96,10 +88,6 @@ errorRouter.patch(
           )
         );
     } catch (error) {
-      if (Array.isArray(error?.errors)) {
-        return res.status(error.statusCode).send({ errors: error.errors });
-      }
-
       next(error);
     }
   }
@@ -124,10 +112,6 @@ errorRouter.delete(
           returnResponse({}, `Successfully deleted an error with ID ${errorID}`)
         );
     } catch (error) {
-      if (Array.isArray(error?.errors)) {
-        return res.status(error.statusCode).send({ errors: error.errors });
-      }
-
       next(error);
     }
   }
