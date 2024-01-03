@@ -1,21 +1,23 @@
 import { validationResult } from "express-validator";
-import { universalValidationCodes } from "./universalCodes";
+import { ValidationCodes } from "../../types";
+import { Request } from "express";
 
-export const validate = (req) => {
+export const validate = (req: Request) => {
   const result = validationResult(req);
+  const errors = result.array();
   const returnErrorCodes = [];
 
-  if (result.errors.length > 0) {
-    for (let i = 0; i < result.errors.length; i++) {
-      const currentError = result.errors[i];
+  if (errors.length > 0) {
+    for (let i = 0; i < errors.length; i++) {
+      const currentError = errors[i];
 
-      if (currentError.type === universalValidationCodes.UNKNOWN_FIELDS) {
+      if (currentError.type === ValidationCodes.UNKNOWN_FIELDS) {
         currentError.fields.map((unknownField) => {
           const unknownFieldName = unknownField.path;
           const unknownFieldLocation = unknownField.location;
 
           returnErrorCodes.push({
-            code: universalValidationCodes.UNKNOWN_FIELDS,
+            code: ValidationCodes.UNKNOWN_FIELDS,
             message: `${unknownFieldName} field is an unknown fields inside the ${unknownFieldLocation} request`,
           });
         });

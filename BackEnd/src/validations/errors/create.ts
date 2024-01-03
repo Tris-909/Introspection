@@ -1,16 +1,17 @@
 import {
   constructInvalidTypeErrorMsg,
   constructMissingFieldErrorMsg,
-} from "../shared";
-import { errorValidationCodes } from "./codes";
+} from "../";
+import { ValidationCodes } from "../../types";
+import { Schema } from "express-validator";
 
-export const createSchemaCheck = () => {
+//TODO: WORK THIS SHIT OUT
+export const createSchemaCheck = (): Schema => {
   return {
     title: {
       exists: {
-        options: true,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructMissingFieldErrorMsg({
             fieldName: "title",
             location: "body",
@@ -18,9 +19,8 @@ export const createSchemaCheck = () => {
         },
       },
       isString: {
-        options: true,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructInvalidTypeErrorMsg({
             fieldName: "title",
             type: "String",
@@ -30,9 +30,8 @@ export const createSchemaCheck = () => {
     },
     description: {
       exists: {
-        options: true,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructMissingFieldErrorMsg({
             fieldName: "description",
             location: "body",
@@ -40,9 +39,8 @@ export const createSchemaCheck = () => {
         },
       },
       isString: {
-        options: true,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructInvalidTypeErrorMsg({
             fieldName: "description",
             type: "String",
@@ -52,9 +50,8 @@ export const createSchemaCheck = () => {
     },
     tags: {
       exists: {
-        options: true,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructMissingFieldErrorMsg({
             fieldName: "tags",
             location: "body",
@@ -62,12 +59,11 @@ export const createSchemaCheck = () => {
         },
       },
       isArray: {
-        options: true,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructInvalidTypeErrorMsg({
             fieldName: "tags",
-            location: "Array",
+            type: "Array",
           }),
         },
       },

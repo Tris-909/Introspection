@@ -1,5 +1,5 @@
 import express from "express";
-import { param, checkSchema, checkExact } from "express-validator";
+import { param, body, checkSchema, checkExact } from "express-validator";
 import { returnResponse } from "../utils";
 import {
   createError,
@@ -7,16 +7,22 @@ import {
   patchError,
   deleteError,
 } from "../controllers/error";
-import { createSchemaCheck, updateSchemaCheck } from "../validations/errors";
-import { validate } from "../validations";
-import { constructInvalidFormatErrorMsg } from "../validations/shared";
+import {
+  validate,
+  createSchemaCheck,
+  updateSchemaCheck,
+  constructInvalidFormatErrorMsg,
+} from "../validations";
+import { Request, Response, NextFunction } from "express";
+import { constructInvalidTypeErrorMsg } from "../validations";
+import { ValidationCodes } from "../types";
 
 export const errorRouter = express.Router();
 
 errorRouter.post(
   "/",
   checkSchema(createSchemaCheck(), ["body"]),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       validate(req);
       const data = req.body;
@@ -31,7 +37,8 @@ errorRouter.post(
           )
         );
     } catch (error) {
-      next(error);
+      res.locals.errors = error;
+      next();
     }
   }
 );
@@ -43,7 +50,7 @@ errorRouter.get(
     .withMessage(
       constructInvalidFormatErrorMsg({ fieldName: "id", format: "uuid" })
     ),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       validate(req);
       const errorID = req.params.id;
@@ -58,7 +65,8 @@ errorRouter.get(
           )
         );
     } catch (error) {
-      next(error);
+      res.locals.errors = error;
+      next();
     }
   }
 );
@@ -70,8 +78,40 @@ errorRouter.patch(
     .withMessage(
       constructInvalidFormatErrorMsg({ fieldName: "id", format: "uuid" })
     ),
-  checkExact(checkSchema(updateSchemaCheck(), ["body"])),
-  async (req, res, next) => {
+  body("title")
+    .optional()
+    .isString()
+    .withMessage({
+      code: ValidationCodes.INVALID_REQUEST_BODY,
+      msg: constructInvalidTypeErrorMsg({
+        fieldName: "title",
+        type: "String",
+      }),
+    }),
+  body("description")
+    .optional()
+    .isString()
+    .withMessage({
+      code: ValidationCodes.INVALID_REQUEST_BODY,
+      msg: constructInvalidTypeErrorMsg({
+        fieldName: "description",
+        type: "String",
+      }),
+    }),
+  body("description")
+    .optional()
+    .isArray()
+    .withMessage({
+      code: ValidationCodes.INVALID_REQUEST_BODY,
+      msg: constructInvalidTypeErrorMsg({
+        fieldName: "tags",
+        type: "Array",
+      }),
+    }),
+  checkExact([], {
+    message: "Unknown fields spotted",
+  }),
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       validate(req);
       const errorID = req.params.id;
@@ -88,7 +128,8 @@ errorRouter.patch(
           )
         );
     } catch (error) {
-      next(error);
+      res.locals.errors = error;
+      next();
     }
   }
 );
@@ -100,7 +141,7 @@ errorRouter.delete(
     .withMessage(
       constructInvalidFormatErrorMsg({ fieldName: "id", format: "uuid" })
     ),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       validate(req);
       const errorID = req.params.id;
@@ -112,7 +153,8 @@ errorRouter.delete(
           returnResponse({}, `Successfully deleted an error with ID ${errorID}`)
         );
     } catch (error) {
-      next(error);
+      res.locals.errors = error;
+      next();
     }
   }
 );

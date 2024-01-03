@@ -1,14 +1,14 @@
-import { constructInvalidTypeErrorMsg } from "../shared";
-import { errorValidationCodes } from "./codes";
+import { constructInvalidTypeErrorMsg } from "../";
+import { ValidationCodes } from "../../types";
+import { Request } from "express";
 
 export const updateSchemaCheck = () => {
   return {
     title: {
       isString: {
-        if: (value, { req }) => !!req.body.title,
-        options: true,
+        if: (_: string, { req }: { req: Request }) => !!req.body.title,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructInvalidTypeErrorMsg({
             fieldName: "title",
             type: "String",
@@ -18,10 +18,9 @@ export const updateSchemaCheck = () => {
     },
     description: {
       isString: {
-        if: (value, { req }) => !!req.body.description,
-        options: true,
+        if: (_: string, { req }: { req: Request }) => !!req.body.description,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructInvalidTypeErrorMsg({
             fieldName: "description",
             type: "String",
@@ -31,13 +30,12 @@ export const updateSchemaCheck = () => {
     },
     tags: {
       isArray: {
-        if: (value, { req }) => !!req.body.tags,
-        options: true,
+        if: (_: string, { req }: { req: Request }) => !!req.body.tags,
         errorMessage: {
-          code: errorValidationCodes.INVALID_REQUEST_BODY,
+          code: ValidationCodes.INVALID_REQUEST_BODY,
           msg: constructInvalidTypeErrorMsg({
             fieldName: "tags",
-            location: "Array",
+            type: "Array",
           }),
         },
       },
