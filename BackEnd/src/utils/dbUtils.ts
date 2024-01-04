@@ -1,5 +1,11 @@
 import { firestore } from "databases";
 import { CollectionDatabaseNames, ValidationCodes, ErrorEntity } from "types";
+import {
+  WhereFilterOp,
+  Query,
+  DocumentData,
+  QueryDocumentSnapshot,
+} from "firebase-admin/firestore";
 
 export const createDoc = async ({
   collectionName,
@@ -45,41 +51,92 @@ export const readDocById = async ({
   }
 };
 
+const getCollection = (collectionName: string): Query<DocumentData> => {
+  return firestore.collection(collectionName);
+};
+
 // TODO: TO BE REFINED FOR PAGINATION AND MORE COMPLEX QUERIES
-// export const readDocs = async ({
-//   collectionName,
-//   conditions,
-// }: {
-//   collectionName: CollectionDatabaseNames;
-//   conditions: {
-//     field: string;
-//     queryOperator: string;
-//     value: any;
-//   }[];
-// }) => {
-//   try {
-//     let itemRef = firestore.collection(collectionName);
+export const readDocs = async ({
+  collectionName,
+  conditions,
+  currentItems = [],
+  cursor = null,
+}: {
+  collectionName: CollectionDatabaseNames;
+  conditions: {
+    field: string;
+    queryOperator: WhereFilterOp;
+    value: any;
+  }[];
+  currentItems?: Record<string, any>[];
+  cursor?: QueryDocumentSnapshot<DocumentData, DocumentData> | null;
+}): Promise<any> => {
+  const ITEM_LIMIT_PER_QUERY = 3;
+  try {
+    if (cursor) {
+      let itemRef = getCollection(collectionName);
 
-//     for (let i = 0; i < conditions.length; i++) {
-//       const { field, queryOperator, value } = conditions[i];
-//       itemRef = itemRef.where(field, queryOperator, value);
-//     }
+      for (let i = 0; i < conditions.length; i++) {
+        const { field, queryOperator, value } = conditions[i];
+        itemRef = itemRef.where(field, queryOperator, value);
+      }
 
-//     const snapshot = await itemRef.limit(3).get();
-//     const last = snapshot.docs[snapshot.docs.length - 1];
+      const next = await itemRef
+        .orderBy("createdAt")
+        .startAfter(cursor.data().createdAt)
+        .limit(3)
+        .get();
 
-//     console.log("last", last);
+      if (next.empty) {
+        return currentItems;
+      }
 
-//     const next = firestore
-//       .collection(collectionName)
-//       .startAfter(last.data().population)
-//       .limit(3);
+      next.forEach((doc) => {
+        currentItems.push(doc.data());
+      });
 
-//     console.log("next", next);
-//   } catch (error: any) {
-//     throw new Error(error);
-//   }
-// };
+      const last = next.docs[next.docs.length - 1];
+      if (!last.data()) {
+        return currentItems;
+      }
+
+      return readDocs({
+        collectionName: CollectionDatabaseNames.ERROR_COLLECTION,
+        conditions: conditions,
+        currentItems: currentItems,
+        cursor: last,
+      });
+    } else {
+      let itemRef = getCollection(collectionName);
+
+      for (let i = 0; i < conditions.length; i++) {
+        const { field, queryOperator, value } = conditions[i];
+        itemRef = itemRef.where(field, queryOperator, value);
+      }
+
+      const snapshot = await itemRef.limit(ITEM_LIMIT_PER_QUERY).get();
+
+      if (snapshot.empty) {
+        return currentItems;
+      } else {
+        snapshot.forEach((doc) => {
+          currentItems.push(doc.data());
+        });
+
+        const last = snapshot.docs[snapshot.docs.length - 1];
+
+        return readDocs({
+          collectionName: CollectionDatabaseNames.ERROR_COLLECTION,
+          conditions: conditions,
+          currentItems: currentItems,
+          cursor: last,
+        });
+      }
+    }
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
 
 export const updateDocById = async ({
   collectionName,

@@ -12,5 +12,8 @@ Introspection is a web based and mobile app for users to record their mistakes, 
 - (02/1/2024) Create util funcs to interact with Firestore
 - (02/1/2024) Error router ( READ / CREATE / UPDATE / DELETE )
 - (02/1/2024) Advanced error handling with custom error message / code and middlewares
+- (03/1/2024) Integrating the whole project with TypeScript, adding missing types
+- (04/1/2024) Using absolute path for imports by altering `tsconfig`
+- (04/1/2024) First ever working migration file and figure out how to run them
 
 </details>

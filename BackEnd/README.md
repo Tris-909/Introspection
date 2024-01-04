@@ -1,13 +1,12 @@
-# Progress Tracking
+# How to start this project when you fork in from Github ?
 
-- Express App Scaffold set up [Link](https://blog.logrocket.com/how-to-set-up-node-typescript-express/)
-- Setting up BackEnd to work with Firebase and create any object in error collection to test the connection
-- Import need to have `.js` extension at the end
-- Validators using `express-validators`
+- create `.env` file in the same level as `package.json`
+- In this `.env` file, you can find :
+  - FIREBASE_PROJECT_ID from Firebase Project Settings/Generals
+  - FIREBASE_CLIENT_EMAIL from Firebase Project Settings/Service accounts/Firebase service account
+  - FIREBASE_PRIVATE_KEY Choosing `Node.js` option from Project Settings/Service accounts/Generate new private key
 
-## Problems need to be tackled
+# How to run migration script in `BackEnd` project ?
 
-- Create utils function to read / read-list / create / update / delete
-- update endpoint
-- delete endpoint
-- how to do migrations with Firebase ?
+- Run `npm run migrate {path_to_filename}`
+- Example : `npm run migrate ./src/migrations/04012024-example.ts`
