@@ -1,5 +1,5 @@
-import { updateDocById } from "../../utils";
-import { CollectionDatabaseNames } from "../../types";
+import { updateDocById } from "utils";
+import { CollectionDatabaseNames } from "types";
 
 export const patchError = async ({
   id,

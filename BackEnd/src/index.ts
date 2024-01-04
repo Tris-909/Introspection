@@ -3,8 +3,8 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-import { errorRouter } from "./routers/errorRouter";
-import { errorMiddleware } from "./middlewares/errorHandler";
+import { errorRouter } from "routers/errorRouter";
+import { errorMiddleware } from "middlewares/errorHandler";
 
 const app = express();
 const port = process.env.PORT || 3000;

@@ -1,5 +1,4 @@
 import { createSchemaCheck } from "./errors/create";
-import { updateSchemaCheck } from "./errors/update";
 import { validate } from "./shared/validate";
 import {
   constructInvalidTypeErrorMsg,
@@ -9,7 +8,6 @@ import {
 
 export {
   createSchemaCheck,
-  updateSchemaCheck,
   validate,
   constructInvalidTypeErrorMsg,
   constructMissingFieldErrorMsg,

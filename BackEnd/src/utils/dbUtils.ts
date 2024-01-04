@@ -1,9 +1,5 @@
-import { firestore } from "../databases";
-import {
-  CollectionDatabaseNames,
-  ValidationCodes,
-  ErrorEntity,
-} from "../types";
+import { firestore } from "databases";
+import { CollectionDatabaseNames, ValidationCodes, ErrorEntity } from "types";
 
 export const createDoc = async ({
   collectionName,

@@ -1,5 +1,5 @@
-import { readDocById } from "../../utils";
-import { CollectionDatabaseNames } from "../../types";
+import { readDocById } from "utils";
+import { CollectionDatabaseNames } from "types";
 
 export const readError = async (id: string) => {
   const error = await readDocById({

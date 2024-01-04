@@ -6,16 +6,15 @@ import {
   readError,
   patchError,
   deleteError,
-} from "../controllers/error";
+} from "controllers/error";
 import {
   validate,
   createSchemaCheck,
-  updateSchemaCheck,
   constructInvalidFormatErrorMsg,
 } from "../validations";
 import { Request, Response, NextFunction } from "express";
-import { constructInvalidTypeErrorMsg } from "../validations";
-import { ValidationCodes } from "../types";
+import { constructInvalidTypeErrorMsg } from "validations";
+import { ValidationCodes } from "types";
 
 export const errorRouter = express.Router();
 

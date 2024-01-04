@@ -1,8 +1,8 @@
 import {
   constructInvalidTypeErrorMsg,
   constructMissingFieldErrorMsg,
-} from "../";
-import { ValidationCodes } from "../../types";
+} from "validations";
+import { ValidationCodes } from "types";
 import { Schema } from "express-validator";
 
 //TODO: WORK THIS SHIT OUT

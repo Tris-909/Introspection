@@ -1,5 +1,5 @@
-import { deleteDocById } from "../../utils";
-import { CollectionDatabaseNames } from "../../types";
+import { deleteDocById } from "utils";
+import { CollectionDatabaseNames } from "types";
 
 export const deleteError = async ({ id }: { id: string }) => {
   await deleteDocById({

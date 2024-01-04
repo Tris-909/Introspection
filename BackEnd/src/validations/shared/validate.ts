@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { ValidationCodes } from "../../types";
+import { ValidationCodes } from "types";
 import { Request } from "express";
 
 export const validate = (req: Request) => {

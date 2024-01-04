@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ExpressErrors, ValidationCodes } from "../types";
+import { ExpressErrors, ValidationCodes } from "types";
 
 export const errorMiddleware = (
   req: Request,
