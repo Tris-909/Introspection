@@ -44,7 +44,7 @@ workflows:
   backend:
     when: << pipeline.parameters.run-backend-jobs >>
     jobs:
-      - BE_build:
+      - BE_build
       - BE_unit_test:
           requires:
             - BE_build
