@@ -6,23 +6,10 @@
   "scripts": {
     "dev": "nodemon",
     "build": "npx tsc",
-    "start": "tsc-watch --onSuccess && \"node ./dist/index.js\"",
+    "start": "npx nodemon",
     "migration": "node -r ts-node/register -r tsconfig-paths/register",
     "test": "jest --maxWorkers=50%",
     "test:ci": "jest --runInBand"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.test.ts",
-      "**/*.spec.ts",
-      ".git",
-      "node_modules"
-    ],
-    "watch": [
-      "src"
-    ],
-    "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/index.ts",
-    "ext": "ts, js"
   },
   "author": "TranMinhTri",
   "license": "ISC",
