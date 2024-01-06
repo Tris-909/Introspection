@@ -15,19 +15,13 @@ jobs:
       tag: "18.16"
     steps:
       - checkout
-      - run: node --version
-      - run: cd BackEnd
-      - run: npm install
-      - run:
-          command: npm run build
-          name: Compile code ( build )
-      - run:
-          command: npm run start
-          name: Start server
-          background: true
-      - run:
-          command: sleep 5 && curl -I localhost:3000
-          name: Verify server is running
+      - run: |
+        cd BackEnd
+        node --version
+        npm install
+        npm run build
+        npm run start
+        sleep 5 && curl -I localhost:3000
   BE_unit_test:
     executor:
       name: node/default
