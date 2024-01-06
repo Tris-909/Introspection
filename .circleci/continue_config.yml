@@ -13,5 +13,5 @@ workflows:
     when: << pipeline.parameters.run-backend-jobs >>
     jobs:
       name: BackEnd
-      command: "install -DskipTests"
-      app_src_directory: "BackEnd"
+      base-revision: master
+      config-path: ./BackEnd/.circleci/config.yml
