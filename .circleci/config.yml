@@ -10,6 +10,6 @@ workflows:
     jobs:
       - path-filtering/filter:
           base-revision: master
-          config-path: .circleci/continue_config.yml
+          config-path: ./BackEnd/continue_config.yml
           mapping: |
             BackEnd/.* run-backend-jobs true
