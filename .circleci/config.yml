@@ -4,7 +4,7 @@ orbs:
 
 jobs:
   build:
-    working_directory: ~/Introspection/BackEnd
+    working_directory: ~/BackEnd
     executor:
       name: node/default
       tag: "18.16"
@@ -13,18 +13,22 @@ jobs:
       - run: node --version
       - node/install-packages:
           pkg-manager: npm
+          path: Introspection/BackEnd
       - run:
           command: npm run build
           name: Compile code ( build )
+          path: Introspection/BackEnd
       - run:
           command: npm run start
           name: Start server
+          path: Introspection/BackEnd
           background: true
       - run:
           command: sleep 5 && curl -I localhost:3000
           name: Verify server is running
+          path: Introspection/BackEnd
   unit_test:
-    working_directory: ~/Introspection/BackEnd
+    working_directory: ~/BackEnd
     executor:
       name: node/default
     steps:
@@ -32,9 +36,11 @@ jobs:
       - run: node --version
       - node/install-packages:
           pkg-manager: npm
+          path: Introspection/BackEnd
       - run:
           command: npm run test:ci
           name: Run unit tests
+          path: Introspection/BackEnd
 
 workflows:
   BackEnd:
