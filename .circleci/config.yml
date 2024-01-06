@@ -31,7 +31,6 @@ jobs:
     steps:
       - checkout:
           path: ~/Introspection/BackEnd
-      - cd BackEnd
       - run: node --version
       - node/install-packages:
           pkg-manager: npm
