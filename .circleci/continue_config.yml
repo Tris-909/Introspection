@@ -16,8 +16,7 @@ jobs:
     steps:
       - checkout
       - run: node --version
-      - node/install-packages:
-          pkg-manager: npm
+      - run: npm install
       - run:
           command: npm run build
           name: Compile code ( build )
