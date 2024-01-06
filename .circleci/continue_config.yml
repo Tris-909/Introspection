@@ -8,10 +8,43 @@ parameters:
     type: boolean
     default: false
 
+jobs:
+  BE_build:
+    executor:
+      name: node/default
+      tag: "18.16"
+    steps:
+      - checkout
+      - run: node --version
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run build
+          name: Compile code ( build )
+      - run:
+          command: npm run start
+          name: Start server
+          background: true
+      - run:
+          command: sleep 5 && curl -I localhost:3000
+          name: Verify server is running
+  BE_unit_test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - run: node --version
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run test:ci
+          name: Run unit tests
+
 workflows:
   backend:
     when: << pipeline.parameters.run-backend-jobs >>
     jobs:
-      name: BackEnd
-      base-revision: master
-      config-path: ./BackEnd/.circleci/config.yml
+      - BE_build
+      - BE_unit_test
+          requires:
+            - BE_build

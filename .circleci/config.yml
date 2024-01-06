@@ -1,17 +1,15 @@
 version: 2.1
 
-# this allows you to use CircleCI's dynamic configuration feature
 setup: true
 
 orbs:
-  path-filtering: circleci/path-filtering@0.1.1
+  path-filtering: circleci/path-filtering@1.0.0
 
 workflows:
   always-run:
     jobs:
       - path-filtering/filter:
-          name: check-updated-files
-          mapping: |
-            BackEnd/.* run-backend-jobs true
           base-revision: master
           config-path: .circleci/continue_config.yml
+          mapping: |
+            BackEnd/.* run-backend-jobs true
