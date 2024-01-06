@@ -12,7 +12,7 @@ export const createError = async ({
   title,
   description,
   tags,
-}: CreateErrorArgs) => {
+}: ACreateErrorArgs) => {
   const errorEntity = {
     id: randomUUID(),
     title: title,

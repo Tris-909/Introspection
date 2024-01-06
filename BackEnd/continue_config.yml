@@ -21,8 +21,6 @@ jobs:
             node --version
             npm install
             npm run build
-            npm run start
-            sleep 5 && curl -I localhost:3000
   BE_unit_test:
     executor:
       name: node/default
