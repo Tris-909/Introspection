@@ -15,5 +15,6 @@ Introspection is a web based and mobile app for users to record their mistakes, 
 - (03/1/2024) Integrating the whole project with TypeScript, adding missing types
 - (04/1/2024) Using absolute path for imports by altering `tsconfig`
 - (04/1/2024) First ever working migration file and figure out how to run them
+- (05/1/2024) Set up jest configs and writing first test cases for controllers/error
 
 </details>
