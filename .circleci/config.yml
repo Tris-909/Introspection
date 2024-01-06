@@ -10,7 +10,7 @@ workflows:
   always-run:
     jobs:
       - path-filtering/filter:
-        name: check-updated-files
-          BackEnd/.* run-backend-jobs true
-        base-revision: master
-        config-path: .circleci/continue_config.yml
+          name: check-updated-files
+            BackEnd/.* run-backend-jobs true
+          base-revision: master
+          config-path: .circleci/continue_config.yml
