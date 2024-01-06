@@ -4,7 +4,7 @@ orbs:
 
 jobs:
   build:
-    working_directory: ~/project/Introspection/BackEnd
+    working_directory: ~/project/Introspection/BackEnd/BackEnd
     executor:
       name: node/default
       tag: "18.16"
@@ -24,7 +24,7 @@ jobs:
           command: sleep 5 && curl -I localhost:3000
           name: Verify server is running
   unit_test:
-    working_directory: ~/project/Introspection/BackEnd
+    working_directory: ~/project/Introspection/BackEnd/BackEnd
     executor:
       name: node/default
     steps:
