@@ -1,45 +1,16 @@
 version: 2.1
-orbs:
-  node: circleci/node@5.2.0
 
-jobs:
-  build:
-    working_directory: ~/project/BackEnd
-    executor:
-      name: node/default
-      tag: "18.16"
-    steps:
-      - checkout
-      - run: node --version
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm run build
-          name: Compile code ( build )
-      - run:
-          command: npm run start
-          name: Start server
-          background: true
-      - run:
-          command: sleep 5 && curl -I localhost:3000
-          name: Verify server is running
-  unit_test:
-    working_directory: ~/project/BackEnd
-    executor:
-      name: node/default
-    steps:
-      - checkout
-      - run: node --version
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm run test:ci
-          name: Run unit tests
+# this allows you to use CircleCI's dynamic configuration feature
+setup: true
+
+orbs:
+  path-filtering: circleci/path-filtering@0.1.1
 
 workflows:
-  BackEnd:
+  always-run:
     jobs:
-      - build
-      - unit_test:
-          requires:
-            - build
+      - path-filtering/filter:
+        name: check-updated-files
+          BackEnd/.* run-backend-jobs true
+        base-revision: master
+        config-path: .circleci/continue_config.yml
