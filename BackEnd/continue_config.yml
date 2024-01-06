@@ -26,15 +26,16 @@ jobs:
       name: node/default
     steps:
       - checkout
-      - run: node --version
-      - run: cd BackEnd
-      - run: npm install
       - run:
-          command: npm run test:ci
-          name: Run unit tests
+          command: |
+            cd BackEnd
+            node --version
+            npm install
+            npm run build
+            npm run test:ci
 
 workflows:
-  backend:
+  BackEnd:
     when: << pipeline.parameters.run-backend-jobs >>
     jobs:
       - BE_build
