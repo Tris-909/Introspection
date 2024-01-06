@@ -33,8 +33,7 @@ jobs:
     steps:
       - checkout
       - run: node --version
-      - node/install-packages:
-          pkg-manager: npm
+      - run: npm install
       - run:
           command: npm run test:ci
           name: Run unit tests
