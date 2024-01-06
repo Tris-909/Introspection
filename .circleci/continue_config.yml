@@ -12,7 +12,6 @@ workflows:
   backend:
     when: << pipeline.parameters.run-backend-jobs >>
     jobs:
-      - maven/test:
-          name: BackEnd
-          command: "install -DskipTests"
-          app_src_directory: "BackEnd"
+      name: BackEnd
+      command: "install -DskipTests"
+      app_src_directory: "BackEnd"
