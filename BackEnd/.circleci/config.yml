@@ -6,9 +6,10 @@ jobs:
   build:
     executor:
       name: node/default
-      tag: '18.16'
+      tag: "18.16"
     steps:
       - checkout
+      - cd BackEnd
       - run: node --version
       - node/install-packages:
           pkg-manager: npm
@@ -27,6 +28,7 @@ jobs:
       name: node/default
     steps:
       - checkout
+      - cd BackEnd
       - run: node --version
       - node/install-packages:
           pkg-manager: npm
