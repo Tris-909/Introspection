@@ -37,7 +37,7 @@ jobs:
           name: Run unit tests
 
 workflows:
-  Deployment:
+  BackEnd:
     jobs:
       - build
       - unit_test:
