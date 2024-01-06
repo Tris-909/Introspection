@@ -16,7 +16,8 @@ jobs:
     steps:
       - checkout
       - run: node --version
-      - run: cd BackEnd && npm install
+      - run: cd BackEnd
+      - run: npm install
       - run:
           command: npm run build
           name: Compile code ( build )
@@ -33,6 +34,7 @@ jobs:
     steps:
       - checkout
       - run: node --version
+      - run: cd BackEnd
       - run: npm install
       - run:
           command: npm run test:ci
