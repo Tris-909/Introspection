@@ -46,5 +46,5 @@ workflows:
     jobs:
       - BE_build
       - BE_unit_test
-        requires:
-          - BE_build
+          requires:
+            - BE_build
