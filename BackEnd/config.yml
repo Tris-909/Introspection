@@ -1,0 +1,68 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.2.0
+
+parameters:
+  run-backend-jobs:
+    type: boolean
+    default: false
+
+jobs:
+  BE_build:
+    executor:
+      name: node/default
+      tag: "18.16"
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd BackEnd
+            node --version
+            npm install
+            npm run build
+  BE_unit_test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd BackEnd
+            node --version
+            npm install
+            npm run build
+            npm run test:ci
+  BE_deploy_dev:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: medium
+    steps:
+      - run:
+          name: Deploy Introspection's BackEnd to Dev Environment
+          command: |
+            response=$(curl -s -w "%{http_code}" -o response.txt $DEPLOY_DEV_URI)
+            response_code=${response:(-3)}
+            if [ $response_code -eq 200 ]; then
+              echo "Deployment successful!"
+              cat response.txt  # Print the response body
+            else
+              echo "Deployment failed with response code: $response_code"
+              cat response.txt  # Print the response body
+              exit 1
+            fi
+
+workflows:
+  BackEnd:
+    when: << pipeline.parameters.run-backend-jobs >>
+    jobs:
+      - BE_build
+      - BE_unit_test:
+          requires:
+            - BE_build
+      - deploy:
+          requires:
+            - BE_unit_test
+          filters:
+            branches:
+              only: master

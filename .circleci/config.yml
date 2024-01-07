@@ -6,10 +6,10 @@ orbs:
   path-filtering: circleci/path-filtering@1.0.0
 
 workflows:
-  always-run:
+  Setup:
     jobs:
       - path-filtering/filter:
           base-revision: master
-          config-path: ./BackEnd/continue_config.yml
+          config-path: ./BackEnd/config.yml
           mapping: |
             BackEnd/.* run-backend-jobs true
