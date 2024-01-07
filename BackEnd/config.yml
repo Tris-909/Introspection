@@ -37,6 +37,8 @@ jobs:
     machine:
       image: ubuntu-2004:current
     resource_class: medium
+    environment:
+      ENV: dev
     steps:
       - run:
           name: Deploy Introspection's BackEnd to Dev Environment
@@ -44,10 +46,30 @@ jobs:
             response=$(curl -s -w "%{http_code}" -o response.txt $DEPLOY_DEV_URI)
             response_code=${response:(-3)}
             if [ $response_code -eq 200 ]; then
-              echo "Deployment successful!"
+              echo "Deployment to dev env successful!"
               cat response.txt  # Print the response body
             else
-              echo "Deployment failed with response code: $response_code"
+              echo "Deployment to dev env failed with response code: $response_code"
+              cat response.txt  # Print the response body
+              exit 1
+            fi
+  BE_deploy_prod:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: medium
+    environment:
+      ENV: prod
+    steps:
+      - run:
+          name: Deploy Introspection's BackEnd to PROD Environment
+          command: |
+            response=$(curl -s -w "%{http_code}" -o response.txt $DEPLOY_PROD_URI)
+            response_code=${response:(-3)}
+            if [ $response_code -eq 200 ]; then
+              echo "Deployment to production successful!"
+              cat response.txt  # Print the response body
+            else
+              echo "Deployment to production failed with response code: $response_code"
               cat response.txt  # Print the response body
               exit 1
             fi
@@ -68,6 +90,16 @@ workflows:
       - BE_deploy_dev:
           requires:
             - request_manual_approve_before_deploy_to_dev
+          filters:
+            branches:
+              only: master
+      - request_manual_approve_before_deploy_to_prod:
+          type: approval
+          requires:
+            - BE_deploy_dev
+      - BE_deploy_prod:
+          requires:
+            - request_manual_approve_before_deploy_to_prod
           filters:
             branches:
               only: master
