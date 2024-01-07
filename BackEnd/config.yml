@@ -63,7 +63,8 @@ workflows:
       - hold:
           type: approval
           requires:
-            - BE_deploy_dev
+            - BE_build
+            - BE_unit_test
       - BE_deploy_dev:
           requires:
             - hold
