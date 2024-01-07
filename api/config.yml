@@ -9,7 +9,7 @@ parameters:
     default: false
 
 jobs:
-  BE_build:
+  build:
     executor:
       name: node/default
       tag: "18.16"
@@ -17,23 +17,23 @@ jobs:
       - checkout
       - run:
           command: |
-            cd BackEnd
+            cd api
             node --version
             npm install
             npm run build
-  BE_unit_test:
+  unit_tests:
     executor:
       name: node/default
     steps:
       - checkout
       - run:
           command: |
-            cd BackEnd
+            cd api
             node --version
             npm install
             npm run build
             npm run test:ci
-  BE_deploy_dev:
+  deploy_dev:
     machine:
       image: ubuntu-2004:current
     resource_class: medium
@@ -41,7 +41,7 @@ jobs:
       ENV: dev
     steps:
       - run:
-          name: Deploy Introspection's BackEnd to Dev Environment
+          name: Deploy Introspection's api to Dev Environment
           command: |
             response=$(curl -s -w "%{http_code}" -o response.txt $DEPLOY_DEV_URI)
             response_code=${response:(-3)}
@@ -53,7 +53,7 @@ jobs:
               cat response.txt  # Print the response body
               exit 1
             fi
-  BE_deploy_prod:
+  deploy_prod:
     machine:
       image: ubuntu-2004:current
     resource_class: medium
@@ -61,7 +61,7 @@ jobs:
       ENV: prod
     steps:
       - run:
-          name: Deploy Introspection's BackEnd to PROD Environment
+          name: Deploy Introspection's api to PROD Environment
           command: |
             response=$(curl -s -w "%{http_code}" -o response.txt $DEPLOY_PROD_URI)
             response_code=${response:(-3)}
@@ -75,19 +75,19 @@ jobs:
             fi
 
 workflows:
-  BackEnd:
+  api:
     when: << pipeline.parameters.run-backend-jobs >>
     jobs:
-      - BE_build
-      - BE_unit_test:
+      - build
+      - unit_tests:
           requires:
-            - BE_build
+            - build
       - request_manual_approve_before_deploy_to_dev:
           type: approval
           requires:
-            - BE_build
-            - BE_unit_test
-      - BE_deploy_dev:
+            - build
+            - unit_tests
+      - deploy_dev:
           requires:
             - request_manual_approve_before_deploy_to_dev
           filters:
@@ -96,8 +96,8 @@ workflows:
       - request_manual_approve_before_deploy_to_prod:
           type: approval
           requires:
-            - BE_deploy_dev
-      - BE_deploy_prod:
+            - deploy_dev
+      - deploy_prod:
           requires:
             - request_manual_approve_before_deploy_to_prod
           filters:

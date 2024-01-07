@@ -10,6 +10,6 @@ workflows:
     jobs:
       - path-filtering/filter:
           base-revision: master
-          config-path: ./BackEnd/config.yml
+          config-path: ./api/config.yml
           mapping: |
-            BackEnd/.* run-backend-jobs true
+            api/.* run-backend-jobs true
