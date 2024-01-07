@@ -66,8 +66,6 @@ workflows:
             - BE_deploy_dev
       - BE_deploy_dev:
           requires:
-            - BE_build
-            - BE_unit_test
             - hold
           filters:
             branches:
