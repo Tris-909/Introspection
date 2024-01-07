@@ -60,14 +60,14 @@ workflows:
       - BE_unit_test:
           requires:
             - BE_build
-      - hold:
+      - request_manual_approve_before_deploy_to_dev:
           type: approval
           requires:
             - BE_build
             - BE_unit_test
       - BE_deploy_dev:
           requires:
-            - hold
+            - request_manual_approve_before_deploy_to_dev
           filters:
             branches:
               only: master
