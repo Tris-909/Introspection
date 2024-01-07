@@ -4,7 +4,7 @@ import { ServiceAccount } from "firebase-admin";
 import { Envs } from "types";
 
 const env = process.env.ENV as string;
-const isProd = env === Envs.prod;
+export const isProd = env === Envs.prod;
 
 const adminConfig: ServiceAccount = {
   projectId: isProd

@@ -16,5 +16,6 @@ Introspection is a web based and mobile app for users to record their mistakes, 
 - (04/1/2024) Using absolute path for imports by altering `tsconfig`
 - (04/1/2024) First ever working migration file and figure out how to run them
 - (05/1/2024) Set up jest configs and writing first test cases for controllers/error
+- (06/07-1-2024) Set up CircleCI with 2 different environments DEV and PROD for deployment. Set up `Render` as Deployment Service for `BackEnd` project
 
 </details>

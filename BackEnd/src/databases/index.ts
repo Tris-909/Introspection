@@ -1,3 +1,3 @@
-import { firestore } from "./firebase";
+import { firestore, isProd } from "./firebase";
 
-export { firestore };
+export { firestore, isProd };
