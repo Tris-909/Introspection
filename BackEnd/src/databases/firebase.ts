@@ -1,18 +1,19 @@
 import admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
 import { ServiceAccount } from "firebase-admin";
-import { isProd, DevEnvs } from "utils";
+import { Envs } from "types";
 
-const env = process.env.ENV as DevEnvs;
+const env = process.env.ENV as string;
+const isProd = env === Envs.prod;
 
 const adminConfig: ServiceAccount = {
-  projectId: isProd(env)
+  projectId: isProd
     ? process.env.PROD_FIREBASE_PROJECT_ID
     : process.env.DEV_FIREBASE_PROJECT_ID,
-  clientEmail: isProd(env)
+  clientEmail: isProd
     ? process.env.PROD_FIREBASE_CLIENT_EMAIL
     : process.env.DEV_FIREBASE_CLIENT_EMAIL,
-  privateKey: isProd(env)
+  privateKey: isProd
     ? process.env.PROD_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n")
     : process.env.DEV_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
 };

@@ -1,4 +1,4 @@
-import { readError } from "../read";
+import { readError } from "../../../databases/read";
 import { readDocById } from "utils";
 import { CollectionDatabaseNames } from "types";
 

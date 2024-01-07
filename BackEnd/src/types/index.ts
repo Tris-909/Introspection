@@ -20,6 +20,11 @@ export enum CollectionDatabaseNames {
   ERROR_COLLECTION = "errors",
 }
 
+export enum Envs {
+  prod = "prod",
+  dev = "dev",
+}
+
 export interface ErrorEntity {
   id: string;
   description: string;

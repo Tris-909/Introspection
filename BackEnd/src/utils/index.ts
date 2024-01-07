@@ -6,7 +6,6 @@ import {
   updateDocById,
   deleteDocById,
 } from "./dbUtils";
-import { isProd, DevEnvs } from "./isProd";
 
 export {
   returnResponse,
@@ -15,6 +14,4 @@ export {
   readDocs,
   updateDocById,
   deleteDocById,
-  isProd,
-  DevEnvs,
 };

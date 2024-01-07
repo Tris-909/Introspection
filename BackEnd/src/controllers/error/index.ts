@@ -1,5 +1,5 @@
 import { createError } from "./create";
-import { readError } from "./read";
+import { readError } from "../../databases/read";
 import { patchError } from "./patch";
 import { deleteError } from "./delete";
 
