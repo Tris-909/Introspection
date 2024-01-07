@@ -51,10 +51,6 @@ jobs:
               cat response.txt  # Print the response body
               exit 1
             fi
-  hold:
-    type: approval
-    requires:
-      - BE_deploy_dev
 
 workflows:
   BackEnd:
@@ -64,8 +60,13 @@ workflows:
       - BE_unit_test:
           requires:
             - BE_build
+      - hold:
+          type: approval
+          requires:
+            - BE_deploy_dev
       - BE_deploy_dev:
           requires:
+            - BE_build
             - BE_unit_test
             - hold
           filters:
