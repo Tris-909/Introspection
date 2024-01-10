@@ -20,3 +20,10 @@ Introspection is a web based and mobile app for users to record their mistakes, 
 ## Web problems have been solved
 
 - (08/01/2024) Setting up React Scaffolder with TypeScript, Setting up Env Var, Setting up CSS Libraries, Setting up Firebase initialization
+- (09-10/01/2024) ->
+  - Building authentication functions like Sign In / Sign Up / Forgot Password
+  - Building UI including responsive layout, components following `Atomic Design` principles
+  - Setting up Routers to switch between websites
+  - Setting up Zustand for storing app context
+  - Setting up some configs related to TypeScript to better dev experience
+  - Using `formik` for handling form and build a toast to communicate with users
