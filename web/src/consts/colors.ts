@@ -6,4 +6,7 @@ export const sharedColor = {
   link: {
     primary: "#363b42",
   },
+  appBar: {
+    primary: "#363b42",
+  },
 };

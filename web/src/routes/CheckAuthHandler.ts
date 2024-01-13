@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "databases/firebase";
 import { useAuthenticationStore } from "contexts";
 
-const CheckAuthHandler = ({ children }: { children: ReactElement }) => {
+const CheckAuthHandler = ({ children }: { children: any }) => {
   const updateAutUserhInfo = useAuthenticationStore(
     (state) => state.updateAutUserhInfo
   );

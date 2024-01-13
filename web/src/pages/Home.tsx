@@ -8,9 +8,8 @@ import {
   DialogTitle,
   TextField,
   Typography,
+  Box,
 } from "@mui/material";
-import { auth } from "databases/firebase";
-import { signOut } from "firebase/auth";
 import {
   getDocumentById,
   CollectionNames,
@@ -60,7 +59,7 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <Box p={2}>
       <Typography variant="h5" fontFamily={"Josefin Slab"} fontWeight={600}>
         {dayjs().format("DD/MM/YYYY")}
       </Typography>
@@ -136,17 +135,7 @@ const Home = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Button
-        variant="outlined"
-        sx={{ mt: 2, width: "100%" }}
-        type="submit"
-        onClick={() => {
-          signOut(auth);
-        }}
-      >
-        Logout
-      </Button>
-    </div>
+    </Box>
   );
 };
 

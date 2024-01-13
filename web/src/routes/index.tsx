@@ -1,6 +1,7 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { Authentication, Home, NotFound } from "pages";
+import { CustomAppBar } from "organisms";
 import CheckAuthHandler from "./CheckAuthHandler";
 
 export const routers = createBrowserRouter([
@@ -8,6 +9,7 @@ export const routers = createBrowserRouter([
     path: "/",
     element: (
       <CheckAuthHandler>
+        <CustomAppBar />
         <Home />
       </CheckAuthHandler>
     ),
@@ -22,6 +24,10 @@ export const routers = createBrowserRouter([
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: (
+      <CheckAuthHandler>
+        <NotFound />
+      </CheckAuthHandler>
+    ),
   },
 ]);

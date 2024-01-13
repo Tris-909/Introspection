@@ -31,3 +31,4 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Developing dbUtils for firestore
   - Create greeting user form when the user login the first time
   - Create 404 Not Found page
+  - Create an AppBar that always stay at the top of the screen
