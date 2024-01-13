@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@mui/material";
-import { auth } from "databases/firebase";
+import { auth, db } from "databases/firebase";
 import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { useAuthenticationStore } from "contexts";
 
 const Home = () => {
-  const navigate = useNavigate();
+  const autUserhInfo = useAuthenticationStore((state) => state.autUserhInfo);
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const uid = autUserhInfo?.uid;
+
+      if (uid) {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      }
+    };
+
+    getUserInfo();
+  }, [autUserhInfo]);
 
   return (
     <div>

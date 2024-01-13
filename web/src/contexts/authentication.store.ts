@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { User } from "firebase/auth";
 
 interface AuthenticationStoreState {
   dialogMessage: string;
@@ -7,6 +8,8 @@ interface AuthenticationStoreState {
   updateShowDialog: (newValue: boolean) => void;
   confirmEmail: string;
   updateConfirmEmail: (email: string) => void;
+  autUserhInfo: User | null;
+  updateAutUserhInfo: (newAuthInfo: User) => void;
 }
 
 export const useAuthenticationStore = create<AuthenticationStoreState>(
@@ -19,5 +22,8 @@ export const useAuthenticationStore = create<AuthenticationStoreState>(
 
     confirmEmail: "",
     updateConfirmEmail: (email) => set({ confirmEmail: email }),
+
+    autUserhInfo: null,
+    updateAutUserhInfo: (autUserhInfo) => set({ autUserhInfo: autUserhInfo }),
   })
 );

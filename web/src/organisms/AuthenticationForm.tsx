@@ -33,6 +33,9 @@ const AuthenticationForm = ({ formState }: { formState: FormStates }) => {
   const updateShowDialog = useAuthenticationStore(
     (state) => state.updateShowDialog
   );
+  const updateAutUserhInfo = useAuthenticationStore(
+    (state) => state.updateAutUserhInfo
+  );
 
   const signUpHandler = async (email: string, password: string) => {
     try {
@@ -65,6 +68,7 @@ const AuthenticationForm = ({ formState }: { formState: FormStates }) => {
         };
       }
 
+      updateAutUserhInfo(userCredentials.user);
       navigate("/");
     } catch (error: any) {
       throw {
