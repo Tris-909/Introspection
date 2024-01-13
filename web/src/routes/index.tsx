@@ -1,6 +1,6 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { Authentication, Home } from "pages";
+import { Authentication, Home, NotFound } from "pages";
 import CheckAuthHandler from "./CheckAuthHandler";
 
 export const routers = createBrowserRouter([
@@ -19,5 +19,9 @@ export const routers = createBrowserRouter([
         <Authentication />
       </CheckAuthHandler>
     ),
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);

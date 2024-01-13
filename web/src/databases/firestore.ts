@@ -61,6 +61,7 @@ export const createDocument = async ({
   try {
     await setDoc(doc(db, collectionName, data.id as string), data);
   } catch (error) {
+    console.log("error", error);
     sendCustomNotification({
       message: "Something is wrong, please try again later",
       type: ToastTypes.error,
