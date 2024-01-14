@@ -27,8 +27,11 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Setting up Zustand for storing app context
   - Setting up some configs related to TypeScript to better dev experience
   - Using `formik` for handling form and build a toast to communicate with users
-- (12-13/01/2023) ->
-  - Developing dbUtils for firestore
+- (12-13/01/2024) ->
+  - Developing dbUtils for Firestore
   - Create greeting user form when the user login the first time
   - Create 404 Not Found page
   - Create an AppBar that always stay at the top of the screen
+- (14/01/2024) ->
+  - Developing Record Mistake Dialog to save mistake into Firestore
+  - Fix getAllDocuments function in FireStore and create a query index to able to query documents

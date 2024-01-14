@@ -27,9 +27,14 @@ const RecordMistakeForm = ({
 }: {
   recordMistakeHandler: (data: {
     id: string;
+    userId: string;
     title: string;
     description: string;
     tags: string[];
+    repetitions: {
+      title: string;
+      createdAt: number;
+    }[];
     createdAt: number;
   }) => void;
 }) => {
@@ -55,9 +60,16 @@ const RecordMistakeForm = ({
       const { title, description } = values;
       recordMistakeHandler({
         id: v4(),
+        userId: user!.id,
         title,
         description,
         tags: currentSelectedTags,
+        repetitions: [
+          {
+            title: "First time",
+            createdAt: Date.now(),
+          },
+        ],
         createdAt: Date.now(),
       });
 
@@ -90,6 +102,7 @@ const RecordMistakeForm = ({
           {user &&
             user.tags.map((tag: string) => (
               <FormControlLabel
+                key={tag}
                 control={
                   <Checkbox
                     value={tag}

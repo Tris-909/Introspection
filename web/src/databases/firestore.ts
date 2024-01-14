@@ -12,6 +12,7 @@ import {
   DocumentSnapshot,
   startAfter,
   orderBy,
+  limit,
 } from "firebase/firestore";
 import { db } from "databases/firebase";
 import { sendCustomNotification, ToastTypes } from "utils";
@@ -119,9 +120,9 @@ export const getDocuments = async ({
   conditions: Condition[];
   orderByField: string;
   lastVisibleDocument: DocumentSnapshot | null;
-  accumulatedResult: QueryResult;
+  accumulatedResult?: QueryResult;
 }): Promise<QueryResult> => {
-  const pageSize = 10;
+  const pageSize = 3;
   try {
     let q = query(
       collection(db, collectionName),
@@ -132,7 +133,9 @@ export const getDocuments = async ({
     );
 
     if (lastVisibleDocument) {
-      q = query(q, startAfter(lastVisibleDocument));
+      q = query(q, startAfter(lastVisibleDocument), limit(pageSize));
+    } else {
+      q = query(q, limit(pageSize));
     }
 
     const querySnapshot = await getDocs(q);
@@ -141,7 +144,6 @@ export const getDocuments = async ({
       accumulatedResult.items.push(doc.data());
     });
     accumulatedResult.totalCount += querySnapshot.size;
-
     const lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
 
     if (lastDocument) {
@@ -149,7 +151,7 @@ export const getDocuments = async ({
         collectionName,
         conditions,
         orderByField,
-        lastVisibleDocument,
+        lastVisibleDocument: lastDocument,
         accumulatedResult,
       });
     }
