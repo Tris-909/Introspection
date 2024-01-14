@@ -1,34 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Typography,
-  Box,
-} from "@mui/material";
-import {
-  getDocumentById,
-  CollectionNames,
-  createDocument,
-} from "databases/firestore";
+import { Typography, Box } from "@mui/material";
+import { getDocumentById, CollectionNames } from "databases/firestore";
 import { useAuthenticationStore, useAppStore } from "contexts";
+import { GreetingDialog } from "molecules";
 import dayjs from "dayjs";
 
 const Home = () => {
   const [open, setOpen] = useState(false);
-  const [nameInput, setNameInput] = useState("");
-  const [nameInputError, setNameInputError] = useState(false);
-  const autUserhInfo = useAuthenticationStore((state) => state.autUserhInfo);
+  const authUserInfo = useAuthenticationStore((state) => state.authUserInfo);
   const user = useAppStore((state) => state.user);
   const updateUser = useAppStore((state) => state.updateUser);
 
   useEffect(() => {
     const getUserInfo = async () => {
-      const uid = autUserhInfo?.uid;
+      const uid = authUserInfo?.uid;
 
       if (uid) {
         const user = await getDocumentById({
@@ -45,18 +30,7 @@ const Home = () => {
     };
 
     getUserInfo();
-  }, [autUserhInfo]);
-
-  const createUserEntity = async () => {
-    await createDocument({
-      collectionName: CollectionNames.USERS,
-      data: {
-        id: autUserhInfo?.uid,
-        name: nameInput,
-        createdAt: Date.now(),
-      },
-    });
-  };
+  }, [authUserInfo]);
 
   return (
     <Box p={2}>
@@ -66,75 +40,7 @@ const Home = () => {
       <Typography variant="h5" fontFamily={"Josefin Slab"} fontWeight={600}>
         Hi {user?.name}, Welcome back, ready to own your mistakes ?
       </Typography>
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Hola, welcome to
-          <Typography
-            fontFamily={"Josefin Slab"}
-            fontWeight={600}
-            fontSize={20}
-            style={{ display: "inline-block" }}
-            ml={1}
-            mr={1}
-          >
-            Introspection
-          </Typography>
-          for the first time !
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description" color="black">
-            This software allows you to record your mistake and reflect on it.
-          </DialogContentText>
-          <DialogContentText id="alert-dialog-description" color="black" mt={1}>
-            We will not only remember your mistakes but also the actions that
-            you take to fix them.
-          </DialogContentText>
-          <DialogContentText
-            id="alert-dialog-description"
-            color="black"
-            mt={1}
-            mb={2}
-          >
-            Let get you started, first please tell us your first name.
-          </DialogContentText>
-          <TextField
-            id="standard-basic"
-            label="Your Name"
-            variant="standard"
-            value={nameInput}
-            error={nameInputError}
-            helperText={
-              nameInputError && "Name can only have up to 10 characters"
-            }
-            onChange={(e) => {
-              if (e.target.value.length <= 10) {
-                setNameInputError(false);
-                setNameInput(e.target.value);
-              } else {
-                setNameInputError(true);
-              }
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              createUserEntity();
-              setOpen(false);
-            }}
-            autoFocus
-            variant="outlined"
-            disabled={nameInput.length === 0}
-          >
-            Let's start
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <GreetingDialog open={open} setOpen={setOpen} />
     </Box>
   );
 };

@@ -8,7 +8,7 @@ interface AuthenticationStoreState {
   updateShowDialog: (newValue: boolean) => void;
   confirmEmail: string;
   updateConfirmEmail: (email: string) => void;
-  autUserhInfo: User | null;
+  authUserInfo: User | null;
   updateAutUserhInfo: (newAuthInfo: User) => void;
 }
 
@@ -23,7 +23,7 @@ export const useAuthenticationStore = create<AuthenticationStoreState>(
     confirmEmail: "",
     updateConfirmEmail: (email) => set({ confirmEmail: email }),
 
-    autUserhInfo: null,
-    updateAutUserhInfo: (autUserhInfo) => set({ autUserhInfo: autUserhInfo }),
+    authUserInfo: null,
+    updateAutUserhInfo: (autUserhInfo) => set({ authUserInfo: autUserhInfo }),
   })
 );

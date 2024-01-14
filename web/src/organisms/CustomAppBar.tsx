@@ -15,10 +15,15 @@ import { sharedColor } from "consts";
 import { signOut } from "firebase/auth";
 import { auth } from "databases/firebase";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "contexts";
+import { RecordMistakeDialog } from "molecules";
 
 const CustomAppBar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const updateIsOpenRecordMistakeForm = useAppStore(
+    (state) => state.updateIsOpenRecordMistakeForm
+  );
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -34,73 +39,79 @@ const CustomAppBar = () => {
   };
 
   return (
-    <AppBar
-      position="sticky"
-      sx={{ backgroundColor: sharedColor.appBar.primary }}
-    >
-      <Toolbar
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+    <>
+      <AppBar
+        position="sticky"
+        sx={{ backgroundColor: sharedColor.appBar.primary }}
       >
-        <Box display={"flex"} flexDirection={"row"}>
-          <Tooltip title="Create Category">
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 3, display: "flex", alignItems: "center" }}
-            >
-              <QueueIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Record a mistake">
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2, display: "flex", alignItems: "center" }}
-            >
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box display={"flex"} flexDirection={"row"}>
+            <Tooltip title="Create Category">
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 3, display: "flex", alignItems: "center" }}
+              >
+                <QueueIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Record a mistake">
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2, display: "flex", alignItems: "center" }}
+                onClick={() => {
+                  updateIsOpenRecordMistakeForm(true);
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
 
-        <Box>
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenu}
-            color="inherit"
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={() => logOutHandler()}>Log Out</MenuItem>
-          </Menu>
-        </Box>
-      </Toolbar>
-    </AppBar>
+          <Box>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={() => logOutHandler()}>Log Out</MenuItem>
+            </Menu>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <RecordMistakeDialog />
+    </>
   );
 };
 
