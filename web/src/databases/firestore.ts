@@ -13,6 +13,7 @@ import {
   startAfter,
   orderBy,
   limit,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "databases/firebase";
 import { sendCustomNotification, ToastTypes } from "utils";
@@ -157,6 +158,48 @@ export const getDocuments = async ({
     }
 
     return accumulatedResult;
+  } catch (error) {
+    sendCustomNotification({
+      message: "Something is wrong, please try again later",
+      type: ToastTypes.error,
+    });
+
+    throw new Error("Something is wrong, please try again later");
+  }
+};
+
+export const getDocumentsByPagination = async ({
+  collectionName,
+  conditions,
+  orderByField,
+  lastVisibleDocument,
+}: {
+  collectionName: CollectionNames;
+  conditions: Condition[];
+  orderByField: string;
+  lastVisibleDocument: DocumentSnapshot | null;
+}): Promise<{ items: DocumentData[]; cursor: DocumentSnapshot | null }> => {
+  const pageSize = 3;
+  try {
+    let q = query(
+      collection(db, collectionName),
+      ...conditions.map(({ field, operator, value }) =>
+        where(field, operator, value)
+      ),
+      orderBy(orderByField),
+      startAfter(lastVisibleDocument),
+      limit(pageSize)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    let items: DocumentData[] = [];
+
+    querySnapshot.forEach((doc) => {
+      items.push(doc.data());
+    });
+
+    return { items: items, cursor: lastDocument };
   } catch (error) {
     sendCustomNotification({
       message: "Something is wrong, please try again later",
