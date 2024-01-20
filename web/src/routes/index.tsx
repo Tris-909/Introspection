@@ -24,10 +24,6 @@ export const routers = createBrowserRouter([
   },
   {
     path: "*",
-    element: (
-      <CheckAuthHandler>
-        <NotFound />
-      </CheckAuthHandler>
-    ),
+    element: <NotFound />,
   },
 ]);

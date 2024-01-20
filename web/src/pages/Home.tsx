@@ -27,7 +27,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DocumentSnapshot, DocumentData } from "firebase/firestore";
 import { sharedColor } from "consts";
-import { Mistake } from "types";
+import { Mistake, Condition } from "types";
 import { sendCustomNotification, ToastTypes } from "utils";
 
 const Home = () => {
@@ -89,22 +89,25 @@ const Home = () => {
   }, [mistakes]);
 
   const queryMistakesByTags = async () => {
+    const queryConditions: Condition[] = [
+      {
+        field: "userId",
+        operator: "==",
+        value: user!.id,
+      },
+      {
+        field: "tags",
+        operator: "array-contains",
+        value: "default",
+      },
+    ];
+    const orderByField = "createdAt";
+
     try {
       const { items, cursor } = await getDocumentsByPagination({
         collectionName: CollectionNames.ERRRORS,
-        conditions: [
-          {
-            field: "userId",
-            operator: "==",
-            value: user!.id,
-          },
-          {
-            field: "tags",
-            operator: "array-contains",
-            value: "default",
-          },
-        ],
-        orderByField: "createdAt",
+        conditions: queryConditions,
+        orderByField: orderByField,
         lastVisibleDocument: nextCursor,
       });
 
@@ -116,19 +119,8 @@ const Home = () => {
       if (cursor) {
         const { items: nextItems } = await getDocumentsByPagination({
           collectionName: CollectionNames.ERRRORS,
-          conditions: [
-            {
-              field: "userId",
-              operator: "==",
-              value: user!.id,
-            },
-            {
-              field: "tags",
-              operator: "array-contains",
-              value: "default",
-            },
-          ],
-          orderByField: "createdAt",
+          conditions: queryConditions,
+          orderByField: orderByField,
           lastVisibleDocument: cursor,
         });
         const newMistakesArr = [...mistakes, ...items, ...nextItems];

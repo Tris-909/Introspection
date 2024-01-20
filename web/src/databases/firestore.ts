@@ -8,7 +8,6 @@ import {
   query,
   where,
   collection,
-  WhereFilterOp,
   DocumentSnapshot,
   startAfter,
   orderBy,
@@ -17,17 +16,7 @@ import {
 } from "firebase/firestore";
 import { db } from "databases/firebase";
 import { sendCustomNotification, ToastTypes } from "utils";
-
-interface Condition {
-  field: string;
-  operator: WhereFilterOp;
-  value: any;
-}
-
-interface QueryResult {
-  items: any[];
-  totalCount: number;
-}
+import { Condition, QueryResult } from "types";
 
 export enum CollectionNames {
   USERS = "users",
