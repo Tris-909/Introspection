@@ -24,6 +24,10 @@ const RecordMistakeDialog = () => {
       });
       updateMistakes([data, ...mistakes]);
       updateIsOpenRecordMistakeForm(false);
+      sendCustomNotification({
+        message: "Recording mistake successfully",
+        type: ToastTypes.success,
+      });
     } catch (error: any) {
       sendCustomNotification({
         message: "Something is wrong, please try again later",

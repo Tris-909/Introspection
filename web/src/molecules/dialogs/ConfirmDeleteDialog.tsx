@@ -35,6 +35,10 @@ const ConfirmDeleteDialog = ({
             mt: 3,
             borderColor: sharedColor.button.alert,
             color: sharedColor.button.alert,
+            "&:hover": {
+              borderColor: sharedColor.button.alert,
+              color: sharedColor.button.alert,
+            },
           }}
         />
       </Box>

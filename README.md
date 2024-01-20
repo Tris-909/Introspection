@@ -33,7 +33,7 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Create 404 Not Found page
   - Create an AppBar that always stay at the top of the screen
 - (14/01/2024) ->
-  - Developing Record Mistake Dialog to save mistake into Firestore
+  - Developing Record `Mistake` Dialog to save mistake into Firestore
   - Fix getAllDocuments function in FireStore and create a query index to able to query documents
 - (15-16/01/2024) ->
   - Developing functional pagination components
@@ -41,6 +41,7 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Developing `Mistake` Component as `Accordion` and list of items as repititions of that mistake
   - Making everything with mobile-first approach
 - (20/01/2024) ->
-  - Deleting Mistake function with confirm dialog
+  - Deleting `Mistake` function with confirm dialog
   - Extracting fetched mistakes to global state so we can use it everywhere
-  - Adding Mistake will update state locally
+  - Adding `Mistake` will update state locally
+  - Adding some notification to notify the user after the creation and deletion of a mistake

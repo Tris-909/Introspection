@@ -28,6 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DocumentSnapshot, DocumentData } from "firebase/firestore";
 import { sharedColor } from "consts";
 import { Mistake } from "types";
+import { sendCustomNotification, ToastTypes } from "utils";
 
 const Home = () => {
   // Global Context
@@ -175,6 +176,12 @@ const Home = () => {
 
       // Close confirm delete dialog
       setConfirmDelete(false);
+
+      // Notify customer
+      sendCustomNotification({
+        message: "Delete mistake successfully",
+        type: ToastTypes.success,
+      });
     }
   };
 
