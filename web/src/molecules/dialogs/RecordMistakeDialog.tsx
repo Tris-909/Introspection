@@ -4,6 +4,7 @@ import { RecordMistakeForm } from "organisms";
 import { useAppStore } from "contexts";
 import { sendCustomNotification, ToastTypes } from "utils";
 import { CollectionNames, createDocument } from "databases/firestore";
+import { Mistake } from "types";
 
 const RecordMistakeDialog = () => {
   const isOpenRecordMistakeForm = useAppStore(
@@ -12,19 +13,16 @@ const RecordMistakeDialog = () => {
   const updateIsOpenRecordMistakeForm = useAppStore(
     (state) => state.updateIsOpenRecordMistakeForm
   );
+  const mistakes = useAppStore((state) => state.mistakes);
+  const updateMistakes = useAppStore((state) => state.updateMistakes);
 
-  const recordMistakeHandler = async (data: {
-    id: string;
-    title: string;
-    description: string;
-    tags: string[];
-    createdAt: number;
-  }) => {
+  const recordMistakeHandler = async (data: Mistake) => {
     try {
       await createDocument({
         collectionName: CollectionNames.ERRRORS,
-        data: data,
+        data: data as any,
       });
+      updateMistakes([data, ...mistakes]);
       updateIsOpenRecordMistakeForm(false);
     } catch (error: any) {
       sendCustomNotification({

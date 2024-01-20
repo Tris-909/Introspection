@@ -27,22 +27,29 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DocumentSnapshot, DocumentData } from "firebase/firestore";
 import { sharedColor } from "consts";
+import { Mistake } from "types";
 
 const Home = () => {
-  const [open, setOpen] = useState(false);
-  const [confirmDeleteOpen, setConfirmDelete] = useState(false);
-  const [deleteMistakeId, setDeleteMistakeId] = useState<string | null>(null);
+  // Global Context
   const authUserInfo = useAuthenticationStore((state) => state.authUserInfo);
   const user = useAppStore((state) => state.user);
   const updateUser = useAppStore((state) => state.updateUser);
-  const isSmaller900px = useMediaQuery("(max-width: 900px)");
-  const [mistakes, setMistakes] = useState<DocumentData[]>([]);
+  const mistakes = useAppStore((state) => state.mistakes);
+  const updateMistakes = useAppStore((state) => state.updateMistakes);
+
+  // Component Context
+  const [open, setOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDelete] = useState(false);
+  const [deleteMistakeId, setDeleteMistakeId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [selectivePage, setSelectivePage] = useState(1);
   const [nextCursor, setNextCursor] = useState<DocumentSnapshot<
     DocumentData,
     DocumentData
   > | null>(null);
+
+  // Styles
+  const isSmaller900px = useMediaQuery("(max-width: 900px)");
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -71,6 +78,15 @@ const Home = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    // Altering page number dynamically based on current fetched mistakes
+    const numberOfPages = Math.ceil(mistakes.length / 3);
+    if (numberOfPages !== page) {
+      setSelectivePage(numberOfPages);
+    }
+    setPage(numberOfPages);
+  }, [mistakes]);
+
   const queryMistakesByTags = async () => {
     try {
       const { items, cursor } = await getDocumentsByPagination({
@@ -91,8 +107,8 @@ const Home = () => {
         lastVisibleDocument: nextCursor,
       });
 
-      const newMistakesArr = [...mistakes, ...items];
-      setMistakes(newMistakesArr);
+      const newMistakesArr = [...mistakes, ...(items as Mistake[])];
+      updateMistakes(newMistakesArr);
       setNextCursor(cursor);
       let numberOfPages = Math.ceil(newMistakesArr.length / 3);
 
@@ -155,14 +171,7 @@ const Home = () => {
       const newMistakesAfterDeletion = mistakes.filter(
         (mistake) => mistake.id !== deleteMistakeId
       );
-      setMistakes(newMistakesAfterDeletion);
-
-      // Altering page number dynamically
-      const numberOfPages = Math.ceil(newMistakesAfterDeletion.length / 3);
-      if (numberOfPages !== page) {
-        setSelectivePage(numberOfPages);
-      }
-      setPage(numberOfPages);
+      updateMistakes(newMistakesAfterDeletion);
 
       // Close confirm delete dialog
       setConfirmDelete(false);
@@ -223,7 +232,7 @@ const Home = () => {
                   </Box>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {mistake.repetitions.map((repetition: any, index: string) => (
+                  {mistake.repetitions.map((repetition, index) => (
                     <ListItem
                       key={index}
                       secondaryAction={

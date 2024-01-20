@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "databases/firebase";
 import { sendCustomNotification, ToastTypes } from "utils";
+import { Type } from "typescript";
 
 interface Condition {
   field: string;

@@ -40,3 +40,7 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Developing util function to fetch documents with cursor for pagination
   - Developing `Mistake` Component as `Accordion` and list of items as repititions of that mistake
   - Making everything with mobile-first approach
+- (20/01/2024) ->
+  - Deleting Mistake function with confirm dialog
+  - Extracting fetched mistakes to global state so we can use it everywhere
+  - Adding Mistake will update state locally
