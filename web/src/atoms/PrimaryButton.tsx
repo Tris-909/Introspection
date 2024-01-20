@@ -5,7 +5,7 @@ import { sharedColor } from "consts";
 interface PrimaryButtonProps {
   title: string;
   clickHandler: () => void;
-  style: Record<string, unknown>;
+  style?: Record<string, unknown>;
 }
 
 const PrimaryButton = ({ title, clickHandler, style }: PrimaryButtonProps) => {

@@ -16,17 +16,22 @@ import {
   getDocumentById,
   CollectionNames,
   getDocumentsByPagination,
+  deleteDocument,
 } from "databases/firestore";
 import { useAuthenticationStore, useAppStore } from "contexts";
-import { GreetingDialog } from "molecules";
+import { GreetingDialog, ConfirmDeleteDialog } from "molecules";
+import { PrimaryButton } from "atoms";
 import dayjs from "dayjs";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DocumentSnapshot, DocumentData } from "firebase/firestore";
+import { sharedColor } from "consts";
 
 const Home = () => {
   const [open, setOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDelete] = useState(false);
+  const [deleteMistakeId, setDeleteMistakeId] = useState<string | null>(null);
   const authUserInfo = useAuthenticationStore((state) => state.authUserInfo);
   const user = useAppStore((state) => state.user);
   const updateUser = useAppStore((state) => state.updateUser);
@@ -89,7 +94,7 @@ const Home = () => {
       const newMistakesArr = [...mistakes, ...items];
       setMistakes(newMistakesArr);
       setNextCursor(cursor);
-      let numberOfPages = Math.round(newMistakesArr.length / 3);
+      let numberOfPages = Math.ceil(newMistakesArr.length / 3);
 
       if (cursor) {
         const { items: nextItems } = await getDocumentsByPagination({
@@ -110,9 +115,9 @@ const Home = () => {
           lastVisibleDocument: cursor,
         });
         const newMistakesArr = [...mistakes, ...items, ...nextItems];
-        numberOfPages = Math.round(newMistakesArr.length / 3);
+        numberOfPages = Math.ceil(newMistakesArr.length / 3);
       }
-      setPage(Math.round(numberOfPages));
+      setPage(numberOfPages);
     } catch (error) {
       console.log("error", error);
     }
@@ -133,6 +138,37 @@ const Home = () => {
     return mistakes.slice(firstItemIndex, lastItemIndex);
   };
 
+  const removeMistake = async (id: string) => {
+    setConfirmDelete(true);
+    setDeleteMistakeId(id);
+  };
+
+  const confirmDeleteHandler = async () => {
+    if (deleteMistakeId) {
+      // Delete document in Firestore
+      await deleteDocument({
+        collectionName: CollectionNames.ERRRORS,
+        id: deleteMistakeId,
+      });
+
+      // Remove the mistake from local state
+      const newMistakesAfterDeletion = mistakes.filter(
+        (mistake) => mistake.id !== deleteMistakeId
+      );
+      setMistakes(newMistakesAfterDeletion);
+
+      // Altering page number dynamically
+      const numberOfPages = Math.ceil(newMistakesAfterDeletion.length / 3);
+      if (numberOfPages !== page) {
+        setSelectivePage(numberOfPages);
+      }
+      setPage(numberOfPages);
+
+      // Close confirm delete dialog
+      setConfirmDelete(false);
+    }
+  };
+
   return (
     <Box
       p={2}
@@ -147,7 +183,7 @@ const Home = () => {
           Hi {user?.name}, Welcome back, ready to own your mistakes ?
         </Typography>
         <Paper
-          elevation={3}
+          elevation={0}
           sx={{
             width: "100%",
             mt: 3,
@@ -159,7 +195,11 @@ const Home = () => {
         >
           {prepareMistakes().map((mistake) => {
             return (
-              <Accordion key={mistake.id} sx={{ width: "100%" }}>
+              <Accordion
+                key={mistake.id}
+                sx={{ width: "100%", marginBottom: 3 }}
+                elevation={3}
+              >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1-content"
@@ -183,14 +223,15 @@ const Home = () => {
                   </Box>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {mistake.repetitions.map((repetition: any) => (
+                  {mistake.repetitions.map((repetition: any, index: string) => (
                     <ListItem
-                      key={repetition.createdAt}
+                      key={index}
                       secondaryAction={
                         <IconButton edge="end" aria-label="delete" disabled>
                           <DeleteIcon />
                         </IconButton>
                       }
+                      sx={{ borderTop: "1px solid #ccc" }}
                     >
                       <ListItemText
                         primary={repetition.title}
@@ -201,6 +242,22 @@ const Home = () => {
                     </ListItem>
                   ))}
                 </AccordionDetails>
+                <AccordionActions>
+                  <PrimaryButton
+                    title="Delete Mistake"
+                    clickHandler={() => {
+                      removeMistake(mistake.id);
+                    }}
+                    style={{
+                      borderColor: sharedColor.button.alert,
+                      color: sharedColor.button.alert,
+                      "&:hover": {
+                        borderColor: sharedColor.button.alert,
+                        color: sharedColor.button.alert,
+                      },
+                    }}
+                  />
+                </AccordionActions>
               </Accordion>
             );
           })}
@@ -219,6 +276,11 @@ const Home = () => {
       </Box>
       <Box width={isSmaller900px ? "100%" : "50%"} height={400}></Box>
       <GreetingDialog open={open} setOpen={setOpen} />
+      <ConfirmDeleteDialog
+        open={confirmDeleteOpen}
+        setOpen={setConfirmDelete}
+        deleteHandler={() => confirmDeleteHandler()}
+      />
     </Box>
   );
 };

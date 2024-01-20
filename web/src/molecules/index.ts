@@ -3,6 +3,7 @@ import CustomDialog from "./dialogs/CustomDialog";
 import GreetingDialog from "./dialogs/GreetingDialog";
 import RecordMistakeDialog from "./dialogs/RecordMistakeDialog";
 import TextFieldPassword from "./TextFieldPassword";
+import ConfirmDeleteDialog from "./dialogs/ConfirmDeleteDialog";
 
 export {
   AuthenticateDialog,
@@ -10,4 +11,5 @@ export {
   CustomDialog,
   RecordMistakeDialog,
   GreetingDialog,
+  ConfirmDeleteDialog,
 };
