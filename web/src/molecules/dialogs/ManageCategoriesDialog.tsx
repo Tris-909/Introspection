@@ -69,7 +69,34 @@ const ManageCategoriesDialog = () => {
     });
   };
 
-  const updateRelatedMistakes = async (oldTag: string, newTag: string) => {
+  const removeTagHandler = async (removedTag: string) => {
+    // remove the tag from tag list from app state
+    const newTags = tags.filter((tag) => tag !== removedTag);
+    setTags(newTags);
+
+    // remove the tag from tag list from the user entity in firestore
+    await updateDocument({
+      collectionName: CollectionNames.USERS,
+      id: user?.id,
+      updatedData: {
+        tags: newTags,
+      },
+    });
+
+    // remove the tag from tag list from every mistakes entity in firestore
+    await updateRelatedMistakes(removedTag, null);
+
+    // notify customer
+    sendCustomNotification({
+      message: `Delete category ${removedTag} successfully and Update all related Mistakes`,
+      type: ToastTypes.success,
+    });
+  };
+
+  const updateRelatedMistakes = async (
+    oldTag: string,
+    newTag: string | null
+  ) => {
     // Get All related Mistakes
     const { items } = await getDocuments({
       collectionName: CollectionNames.ERRRORS,
@@ -91,11 +118,20 @@ const ManageCategoriesDialog = () => {
 
     // Loop through Mistakes list and update them one by one with new tag
     for (let i = 0; i < items.length; i++) {
-      const currentTagListOfMistake = items[i].tags;
-      const updateIndex = currentTagListOfMistake.findIndex(
-        (tag: string) => tag === oldTag
-      );
-      currentTagListOfMistake[updateIndex] = newTag;
+      let currentTagListOfMistake = items[i].tags;
+
+      if (newTag) {
+        const updateIndex = currentTagListOfMistake.findIndex(
+          (tag: string) => tag === oldTag
+        );
+        currentTagListOfMistake[updateIndex] = newTag;
+      } else {
+        currentTagListOfMistake = currentTagListOfMistake.filter(
+          (tag: string) => tag !== oldTag
+        );
+      }
+
+      console.log("currentTagListOfMistake", currentTagListOfMistake);
 
       await updateDocument({
         collectionName: CollectionNames.ERRRORS,
@@ -133,7 +169,13 @@ const ManageCategoriesDialog = () => {
                       >
                         <EditIcon />
                       </IconButton>
-                      <IconButton edge="end" aria-label="delete">
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => {
+                          removeTagHandler(tag);
+                        }}
+                      >
                         <ClearIcon />
                       </IconButton>
                     </>
