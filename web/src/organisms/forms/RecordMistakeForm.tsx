@@ -5,16 +5,12 @@ import {
   FormControl,
   TextField,
   Box,
-  IconButton,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { ClickAwayListener } from "@mui/base";
 import { v4 } from "uuid";
 import { PrimaryButton } from "atoms";
-import AddIcon from "@mui/icons-material/Add";
 import { useAppStore } from "contexts";
-import { updateDocument, CollectionNames } from "databases/firestore";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const RecordMistakeSchema = Yup.object().shape({
@@ -39,15 +35,11 @@ const RecordMistakeForm = ({
   }) => void;
 }) => {
   const user = useAppStore((state) => state.user);
-  const updateUser = useAppStore((state) => state.updateUser);
   const updateIsOpenRecordMistakeForm = useAppStore(
     (state) => state.updateIsOpenRecordMistakeForm
   );
 
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
   const [currentSelectedTags, setCurrentSelectedTags] = useState(["default"]);
-  const isAbleToAddMoreCategory = user && user.tags.length <= 10;
   const isSmaller900px = useMediaQuery("(max-width: 900px)");
 
   const formik = useFormik({
@@ -128,49 +120,6 @@ const RecordMistakeForm = ({
                 label={tag}
               />
             ))}
-          {isAddingCategory ? (
-            <ClickAwayListener
-              onClickAway={async () => {
-                setIsAddingCategory(false);
-                if (user && newCategoryName) {
-                  // update global app state
-                  updateUser({
-                    ...user,
-                    tags: [...user.tags, newCategoryName],
-                  });
-
-                  // update firestore
-                  await updateDocument({
-                    collectionName: CollectionNames.USERS,
-                    updatedData: {
-                      tags: [...user.tags, newCategoryName],
-                    },
-                    id: user.id,
-                  });
-                }
-              }}
-            >
-              <TextField
-                label="New Category"
-                variant="standard"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                inputRef={(input) => input && input.focus()}
-              />
-            </ClickAwayListener>
-          ) : isAbleToAddMoreCategory ? (
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2, display: "flex", alignItems: "center" }}
-              onClick={() => {
-                setIsAddingCategory(true);
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-          ) : null}
         </Box>
 
         <FormControl sx={{ width: "100%", mb: 3 }}>
@@ -194,7 +143,6 @@ const RecordMistakeForm = ({
           title="Submit"
           style={{ alignSelf: "flex-end" }}
           clickHandler={() => {
-            setCurrentSelectedTags(["default"]);
             updateIsOpenRecordMistakeForm(false);
           }}
         />
