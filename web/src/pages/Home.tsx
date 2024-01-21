@@ -71,7 +71,7 @@ const Home = () => {
     };
 
     getUserInfo();
-  }, [authUserInfo]);
+  }, [authUserInfo, updateUser]);
 
   useEffect(() => {
     if (user) {

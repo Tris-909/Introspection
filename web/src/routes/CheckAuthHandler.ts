@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
+import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "databases/firebase";
@@ -23,7 +23,7 @@ const CheckAuthHandler = ({ children }: { children: any }) => {
     };
 
     checkCurrentUserAuth();
-  }, []);
+  }, [navigate, updateAutUserhInfo]);
 
   return children;
 };

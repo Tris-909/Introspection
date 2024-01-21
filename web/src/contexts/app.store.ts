@@ -26,7 +26,7 @@ export const useAppStore = create<AppStoreState>((set) => ({
   mistakes: [],
   updateMistakes: (newMistakes: Mistake[]) => set({ mistakes: newMistakes }),
 
-  isOpenRecordMistakeForm: true,
+  isOpenRecordMistakeForm: false,
   updateIsOpenRecordMistakeForm: (newValue) =>
     set({ isOpenRecordMistakeForm: newValue }),
 

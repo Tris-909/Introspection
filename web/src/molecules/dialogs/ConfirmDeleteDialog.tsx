@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { DialogContentText, Typography, Box } from "@mui/material";
 import CustomDialog from "./CustomDialog";
 import { PrimaryButton } from "atoms";
