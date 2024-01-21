@@ -6,9 +6,15 @@ interface PrimaryButtonProps {
   title: string;
   clickHandler: () => void;
   style?: Record<string, unknown>;
+  disabled?: boolean;
 }
 
-const PrimaryButton = ({ title, clickHandler, style }: PrimaryButtonProps) => {
+const PrimaryButton = ({
+  title,
+  clickHandler,
+  style,
+  disabled = false,
+}: PrimaryButtonProps) => {
   return (
     <Button
       variant="outlined"
@@ -24,6 +30,7 @@ const PrimaryButton = ({ title, clickHandler, style }: PrimaryButtonProps) => {
       }}
       type="submit"
       onClick={() => clickHandler()}
+      disabled={disabled}
     >
       {title}
     </Button>

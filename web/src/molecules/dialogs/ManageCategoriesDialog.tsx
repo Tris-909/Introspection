@@ -31,6 +31,9 @@ const ManageCategoriesDialog = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [updateTag, setUpdateTag] = useState<string>("");
   const [isEdit, setIsEdit] = useState<string>("");
+  const [createTag, setCreateTag] = useState<string>("");
+  const [isCreate, setIsCreate] = useState<boolean>(false);
+  const notEligibleToCreateMoreTag = tags.length >= 10;
 
   useEffect(() => {
     if (user) {
@@ -40,6 +43,31 @@ const ManageCategoriesDialog = () => {
       setTags(tagsWithoutDefault);
     }
   }, [user]);
+
+  const createTagHandler = async () => {
+    if (createTag.length <= 20 && createTag.length >= 0) {
+      const newTagList = [...tags, createTag];
+
+      // Update tags list in User entity FireStore
+      await updateDocument({
+        collectionName: CollectionNames.USERS,
+        id: user?.id,
+        updatedData: {
+          tags: newTagList,
+        },
+      });
+
+      // Update app state
+      setTags(newTagList);
+      setIsCreate(false);
+
+      // Notify customer
+      sendCustomNotification({
+        message: "Create category successfully",
+        type: ToastTypes.success,
+      });
+    }
+  };
 
   const editTagHandler = async () => {
     const updateIndex = tags.findIndex((tag) => tag === isEdit);
@@ -202,22 +230,43 @@ const ManageCategoriesDialog = () => {
             }
             return null;
           })}
-        <PrimaryButton
-          title="Add new category"
-          clickHandler={() => {
-            console.log("Add new category");
-          }}
-          style={{
-            borderColor: sharedColor.button.info,
-            color: sharedColor.button.info,
-            "&:hover": {
+        {isCreate && (
+          <ClickAwayListener
+            onClickAway={() => {
+              createTagHandler();
+            }}
+          >
+            <TextField
+              id="standard-basic"
+              variant="standard"
+              placeholder="New Category"
+              sx={{
+                marginTop: 3,
+              }}
+              value={createTag}
+              onChange={(e) => setCreateTag(e.target.value)}
+            />
+          </ClickAwayListener>
+        )}
+        {!notEligibleToCreateMoreTag && (
+          <PrimaryButton
+            title="Add new category"
+            clickHandler={() => {
+              setCreateTag("");
+              setIsCreate(true);
+            }}
+            style={{
               borderColor: sharedColor.button.info,
               color: sharedColor.button.info,
-            },
-            alignSelf: "flex-end",
-            marginTop: 3,
-          }}
-        />
+              "&:hover": {
+                borderColor: sharedColor.button.info,
+                color: sharedColor.button.info,
+              },
+              alignSelf: "flex-end",
+              marginTop: 3,
+            }}
+          />
+        )}
       </Box>
     </CustomDialog>
   );
