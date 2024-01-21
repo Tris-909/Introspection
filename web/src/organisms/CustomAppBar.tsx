@@ -16,13 +16,16 @@ import { signOut } from "firebase/auth";
 import { auth } from "databases/firebase";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "contexts";
-import { RecordMistakeDialog } from "molecules";
+import { RecordMistakeDialog, ManageCategoriesDialog } from "molecules";
 
 const CustomAppBar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const updateIsOpenRecordMistakeForm = useAppStore(
     (state) => state.updateIsOpenRecordMistakeForm
+  );
+  const updateIsOpenManageCategoriesDialog = useAppStore(
+    (state) => state.updateIsOpenManageCategoriesDialog
   );
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -52,13 +55,16 @@ const CustomAppBar = () => {
           }}
         >
           <Box display={"flex"} flexDirection={"row"}>
-            <Tooltip title="Create Category">
+            <Tooltip title="Manage Categories">
               <IconButton
                 size="large"
                 edge="start"
                 color="inherit"
                 aria-label="menu"
                 sx={{ mr: 3, display: "flex", alignItems: "center" }}
+                onClick={() => {
+                  updateIsOpenManageCategoriesDialog(true);
+                }}
               >
                 <QueueIcon />
               </IconButton>
@@ -111,6 +117,7 @@ const CustomAppBar = () => {
         </Toolbar>
       </AppBar>
       <RecordMistakeDialog />
+      <ManageCategoriesDialog />
     </>
   );
 };

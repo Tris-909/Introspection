@@ -13,6 +13,10 @@ interface AppStoreState {
   // Open / Close `RecordMistake` Dialog
   isOpenRecordMistakeForm: boolean;
   updateIsOpenRecordMistakeForm: (newValue: boolean) => void;
+
+  // Open / Close `ManageCategories` Dialog
+  isOpenManageCategoriesDialog: boolean;
+  updateIsOpenManageCategoriesDialog: (newValue: boolean) => void;
 }
 
 export const useAppStore = create<AppStoreState>((set) => ({
@@ -25,4 +29,8 @@ export const useAppStore = create<AppStoreState>((set) => ({
   isOpenRecordMistakeForm: false,
   updateIsOpenRecordMistakeForm: (newValue) =>
     set({ isOpenRecordMistakeForm: newValue }),
+
+  isOpenManageCategoriesDialog: true,
+  updateIsOpenManageCategoriesDialog: (newValue) =>
+    set({ isOpenManageCategoriesDialog: newValue }),
 }));

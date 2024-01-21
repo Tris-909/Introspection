@@ -45,3 +45,6 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Extracting fetched mistakes to global state so we can use it everywhere
   - Adding `Mistake` will update state locally
   - Adding some notification to notify the user after the creation and deletion of a mistake
+- (21/01/2024) ->
+  - Create ManageCategory Dialog
+  - Allow user to edit tag, if a tag is updated it will find all related `Mistakes` and update the tags on it as well

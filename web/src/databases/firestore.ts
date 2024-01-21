@@ -148,6 +148,7 @@ export const getDocuments = async ({
 
     return accumulatedResult;
   } catch (error) {
+    console.log("error", error);
     sendCustomNotification({
       message: "Something is wrong, please try again later",
       type: ToastTypes.error,

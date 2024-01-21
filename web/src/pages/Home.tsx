@@ -252,7 +252,21 @@ const Home = () => {
                 </AccordionDetails>
                 <AccordionActions>
                   <PrimaryButton
-                    title="Delete Mistake"
+                    title="Edit"
+                    clickHandler={() => {
+                      console.log("Edit");
+                    }}
+                    style={{
+                      borderColor: sharedColor.button.info,
+                      color: sharedColor.button.info,
+                      "&:hover": {
+                        borderColor: sharedColor.button.info,
+                        color: sharedColor.button.info,
+                      },
+                    }}
+                  />
+                  <PrimaryButton
+                    title="Delete"
                     clickHandler={() => {
                       removeMistake(mistake.id);
                     }}

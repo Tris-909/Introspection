@@ -10,7 +10,7 @@ const CustomDialog = ({
   title: string | React.ReactElement;
   open: boolean;
   setOpen: (new_value: boolean) => void;
-  children: React.ReactElement;
+  children: any;
 }) => {
   return (
     <Dialog onClose={() => setOpen(false)} open={open} fullWidth>
