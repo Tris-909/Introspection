@@ -21,13 +21,12 @@ import {
 import { sendCustomNotification, ToastTypes } from "utils";
 
 const ManageCategoriesDialog = () => {
-  const user = useAppStore((state) => state.user);
-  const isOpenManageCategoriesDialog = useAppStore(
-    (state) => state.isOpenManageCategoriesDialog
-  );
-  const updateIsOpenManageCategoriesDialog = useAppStore(
-    (state) => state.updateIsOpenManageCategoriesDialog
-  );
+  const {
+    user,
+    isOpenManageCategoriesDialog,
+    updateIsOpenManageCategoriesDialog,
+  } = useAppStore();
+
   const [tags, setTags] = useState<string[]>([]);
   const [updateTag, setUpdateTag] = useState<string>("");
   const [isEdit, setIsEdit] = useState<string>("");

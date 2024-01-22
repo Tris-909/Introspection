@@ -36,7 +36,7 @@ import { sendCustomNotification, ToastTypes } from "utils";
 
 const Home = () => {
   // Global Context
-  const authUserInfo = useAuthenticationStore((state) => state.authUserInfo);
+  const { authUserInfo } = useAuthenticationStore();
   const {
     user,
     updateUser,

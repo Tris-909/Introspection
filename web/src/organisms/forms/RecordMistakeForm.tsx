@@ -34,10 +34,7 @@ const RecordMistakeForm = ({
     createdAt: number;
   }) => void;
 }) => {
-  const user = useAppStore((state) => state.user);
-  const updateIsOpenRecordMistakeForm = useAppStore(
-    (state) => state.updateIsOpenRecordMistakeForm
-  );
+  const { user, updateIsOpenRecordMistakeForm } = useAppStore();
 
   const [currentSelectedTags, setCurrentSelectedTags] = useState(["default"]);
   const isSmaller900px = useMediaQuery("(max-width: 900px)");

@@ -26,16 +26,9 @@ const AuthenticationSchema = Yup.object().shape({
 });
 
 const AuthenticationForm = ({ formState }: { formState: FormStates }) => {
+  const { updateDialogMessage, updateShowDialog, updateAutUserhInfo } =
+    useAuthenticationStore();
   const navigate = useNavigate();
-  const updateDialogMessage = useAuthenticationStore(
-    (state) => state.updateDialogMessage
-  );
-  const updateShowDialog = useAuthenticationStore(
-    (state) => state.updateShowDialog
-  );
-  const updateAutUserhInfo = useAuthenticationStore(
-    (state) => state.updateAutUserhInfo
-  );
 
   const signUpHandler = async (email: string, password: string) => {
     try {

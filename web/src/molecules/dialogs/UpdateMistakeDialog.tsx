@@ -6,14 +6,12 @@ import { updateDocument, CollectionNames } from "databases/firestore";
 import { sendCustomNotification, ToastTypes } from "utils";
 
 const UpdateMistakeDialog = () => {
-  const isOpenUpdateMistakeDialog = useAppStore(
-    (state) => state.isOpenUpdateMistakeDialog
-  );
-  const updateIsOpenUpdateMistakeDialog = useAppStore(
-    (state) => state.updateIsOpenUpdateMistakeDialog
-  );
-  const mistakes = useAppStore((state) => state.mistakes);
-  const updateMistakes = useAppStore((state) => state.updateMistakes);
+  const {
+    isOpenUpdateMistakeDialog,
+    updateIsOpenUpdateMistakeDialog,
+    mistakes,
+    updateMistakes,
+  } = useAppStore();
 
   const updateMistakeHandler = async (
     updateId: string,

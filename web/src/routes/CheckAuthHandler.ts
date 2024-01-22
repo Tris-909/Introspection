@@ -5,9 +5,7 @@ import { auth } from "databases/firebase";
 import { useAuthenticationStore } from "contexts";
 
 const CheckAuthHandler = ({ children }: { children: any }) => {
-  const updateAutUserhInfo = useAuthenticationStore(
-    (state) => state.updateAutUserhInfo
-  );
+  const { updateAutUserhInfo } = useAuthenticationStore();
   const navigate = useNavigate();
 
   useEffect(() => {

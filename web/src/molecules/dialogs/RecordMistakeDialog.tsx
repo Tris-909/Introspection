@@ -7,14 +7,12 @@ import { CollectionNames, createDocument } from "databases/firestore";
 import { Mistake } from "types";
 
 const RecordMistakeDialog = () => {
-  const isOpenRecordMistakeForm = useAppStore(
-    (state) => state.isOpenRecordMistakeForm
-  );
-  const updateIsOpenRecordMistakeForm = useAppStore(
-    (state) => state.updateIsOpenRecordMistakeForm
-  );
-  const mistakes = useAppStore((state) => state.mistakes);
-  const updateMistakes = useAppStore((state) => state.updateMistakes);
+  const {
+    isOpenRecordMistakeForm,
+    updateIsOpenRecordMistakeForm,
+    mistakes,
+    updateMistakes,
+  } = useAppStore();
 
   const recordMistakeHandler = async (data: Mistake) => {
     try {

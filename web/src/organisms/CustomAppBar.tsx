@@ -19,14 +19,11 @@ import { useAppStore } from "contexts";
 import { RecordMistakeDialog, ManageCategoriesDialog } from "molecules";
 
 const CustomAppBar = () => {
+  const { updateIsOpenRecordMistakeForm, updateIsOpenManageCategoriesDialog } =
+    useAppStore();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const updateIsOpenRecordMistakeForm = useAppStore(
-    (state) => state.updateIsOpenRecordMistakeForm
-  );
-  const updateIsOpenManageCategoriesDialog = useAppStore(
-    (state) => state.updateIsOpenManageCategoriesDialog
-  );
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

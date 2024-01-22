@@ -34,15 +34,11 @@ const UpdateMistakeForm = ({
     }
   ) => void;
 }) => {
-  const user = useAppStore((state) => state.user);
-  const editMistakeId = useAppStore((state) => state.editMistakeId);
-  const mistakes = useAppStore((state) => state.mistakes);
+  const { editMistakeId, mistakes, updateIsOpenUpdateMistakeDialog } =
+    useAppStore();
   const editMistake = mistakes.filter(
     (mistake) => mistake.id === editMistakeId
   )[0];
-  const updateIsOpenUpdateMistakeDialog = useAppStore(
-    (state) => state.updateIsOpenUpdateMistakeDialog
-  );
 
   const [currentSelectedTags, setCurrentSelectedTags] = useState(
     editMistake.tags

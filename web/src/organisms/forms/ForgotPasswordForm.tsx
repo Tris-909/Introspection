@@ -7,16 +7,12 @@ import { auth } from "databases/firebase";
 import { sendCustomNotification, ToastTypes } from "utils";
 
 const ForgotPasswordForm = () => {
-  const confirmEmail = useAuthenticationStore((state) => state.confirmEmail);
-  const updateConfirmEmail = useAuthenticationStore(
-    (state) => state.updateConfirmEmail
-  );
-  const updateDialogMessage = useAuthenticationStore(
-    (state) => state.updateDialogMessage
-  );
-  const updateShowDialog = useAuthenticationStore(
-    (state) => state.updateShowDialog
-  );
+  const {
+    confirmEmail,
+    updateConfirmEmail,
+    updateDialogMessage,
+    updateShowDialog,
+  } = useAuthenticationStore();
 
   const sendResetPasswordEmailhandler = async (confirmEmail: string) => {
     try {

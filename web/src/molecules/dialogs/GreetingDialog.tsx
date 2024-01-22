@@ -12,9 +12,9 @@ const GreetingDialog = ({
   open: boolean;
   setOpen: (newValue: boolean) => void;
 }) => {
+  const { authUserInfo } = useAuthenticationStore();
   const [nameInput, setNameInput] = useState("");
   const [nameInputError, setNameInputError] = useState(false);
-  const authUserInfo = useAuthenticationStore((state) => state.authUserInfo);
 
   const createUserEntity = async () => {
     await createDocument({

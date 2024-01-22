@@ -14,12 +14,10 @@ export enum FormStates {
 }
 
 const AuthenticationTemplate = () => {
+  const { dialogMessage, showDialog, updateShowDialog } =
+    useAuthenticationStore();
   const [formState, setFormState] = useState<FormStates>(FormStates.SignIn);
-  const dialogMessage = useAuthenticationStore((state) => state.dialogMessage);
-  const showDialog = useAuthenticationStore((state) => state.showDialog);
-  const updateShowDialog = useAuthenticationStore(
-    (state) => state.updateShowDialog
-  );
+
   const isSmaller900px = useMediaQuery("(max-width: 900px)");
   const isSmaller600px = useMediaQuery("(max-width: 900px)");
 
