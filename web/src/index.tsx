@@ -5,6 +5,8 @@ import { routers } from "./routes";
 import { RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,8 +14,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <CssBaseline />
-    <RouterProvider router={routers} />
+    <CssBaseline />{" "}
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <RouterProvider router={routers} />
+    </LocalizationProvider>
     <ToastContainer />
   </React.StrictMode>
 );

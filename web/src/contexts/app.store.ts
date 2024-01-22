@@ -17,6 +17,12 @@ interface AppStoreState {
   // Open / Close `ManageCategories` Dialog
   isOpenManageCategoriesDialog: boolean;
   updateIsOpenManageCategoriesDialog: (newValue: boolean) => void;
+
+  // Open / Close `UpdateMistake` Dialog
+  isOpenUpdateMistakeDialog: boolean;
+  updateIsOpenUpdateMistakeDialog: (newValue: boolean) => void;
+  editMistakeId: string;
+  updateEditMistakeId: (newValue: string) => void;
 }
 
 export const useAppStore = create<AppStoreState>((set) => ({
@@ -33,4 +39,11 @@ export const useAppStore = create<AppStoreState>((set) => ({
   isOpenManageCategoriesDialog: false,
   updateIsOpenManageCategoriesDialog: (newValue) =>
     set({ isOpenManageCategoriesDialog: newValue }),
+
+  isOpenUpdateMistakeDialog: false,
+  updateIsOpenUpdateMistakeDialog: (newValue) =>
+    set({ isOpenUpdateMistakeDialog: newValue }),
+
+  editMistakeId: "",
+  updateEditMistakeId: (newValue) => set({ editMistakeId: newValue }),
 }));

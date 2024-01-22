@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import {
   Typography,
   Box,
@@ -19,7 +19,11 @@ import {
   deleteDocument,
 } from "databases/firestore";
 import { useAuthenticationStore, useAppStore } from "contexts";
-import { GreetingDialog, ConfirmDeleteDialog } from "molecules";
+import {
+  GreetingDialog,
+  ConfirmDeleteDialog,
+  UpdateMistakeDialog,
+} from "molecules";
 import { PrimaryButton } from "atoms";
 import dayjs from "dayjs";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,10 +37,14 @@ import { sendCustomNotification, ToastTypes } from "utils";
 const Home = () => {
   // Global Context
   const authUserInfo = useAuthenticationStore((state) => state.authUserInfo);
-  const user = useAppStore((state) => state.user);
-  const updateUser = useAppStore((state) => state.updateUser);
-  const mistakes = useAppStore((state) => state.mistakes);
-  const updateMistakes = useAppStore((state) => state.updateMistakes);
+  const {
+    user,
+    updateUser,
+    mistakes,
+    updateMistakes,
+    updateIsOpenUpdateMistakeDialog,
+    updateEditMistakeId,
+  } = useAppStore();
 
   // Component Context
   const [open, setOpen] = useState(false);
@@ -140,13 +148,6 @@ const Home = () => {
     }
   };
 
-  const prepareMistakes = () => {
-    const lastItemIndex = selectivePage * 3;
-    const firstItemIndex = selectivePage * 3 - 3;
-
-    return mistakes.slice(firstItemIndex, lastItemIndex);
-  };
-
   const removeMistake = async (id: string) => {
     setConfirmDelete(true);
     setDeleteMistakeId(id);
@@ -201,88 +202,91 @@ const Home = () => {
             alignItems: "center",
           }}
         >
-          {prepareMistakes().map((mistake) => {
-            return (
-              <Accordion
-                key={mistake.id}
-                sx={{ width: "100%", marginBottom: 3 }}
-                elevation={3}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1-content"
-                  id="panel1-header"
+          {mistakes
+            .slice(selectivePage * 3 - 3, selectivePage * 3)
+            .map((mistake: Mistake) => {
+              return (
+                <Accordion
+                  key={mistake.id}
+                  sx={{ width: "100%", marginBottom: 3 }}
+                  elevation={3}
                 >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                    }}
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
                   >
-                    <Typography
-                      fontSize={26}
-                      fontFamily={"Josefin Slab"}
-                      fontWeight={600}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
                     >
-                      {mistake.title}
-                    </Typography>
-                    <Typography> {mistake.description}</Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {mistake.repetitions.map((repetition, index) => (
-                    <ListItem
-                      key={index}
-                      secondaryAction={
-                        <IconButton edge="end" aria-label="delete" disabled>
-                          <DeleteIcon />
-                        </IconButton>
-                      }
-                      sx={{ borderTop: "1px solid #ccc" }}
-                    >
-                      <ListItemText
-                        primary={repetition.title}
-                        secondary={dayjs(repetition.createdAt).format(
-                          "DD/MM/YYYY"
-                        )}
-                      />
-                    </ListItem>
-                  ))}
-                </AccordionDetails>
-                <AccordionActions>
-                  <PrimaryButton
-                    title="Edit"
-                    clickHandler={() => {
-                      console.log("Edit");
-                    }}
-                    style={{
-                      borderColor: sharedColor.button.info,
-                      color: sharedColor.button.info,
-                      "&:hover": {
+                      <Typography
+                        fontSize={26}
+                        fontFamily={"Josefin Slab"}
+                        fontWeight={600}
+                      >
+                        {mistake.title}
+                      </Typography>
+                      <Typography> {mistake.description}</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {mistake.repetitions.map((repetition, index) => (
+                      <ListItem
+                        key={index}
+                        secondaryAction={
+                          <IconButton edge="end" aria-label="delete" disabled>
+                            <DeleteIcon />
+                          </IconButton>
+                        }
+                        sx={{ borderTop: "1px solid #ccc" }}
+                      >
+                        <ListItemText
+                          primary={repetition.title}
+                          secondary={dayjs(repetition.createdAt).format(
+                            "DD/MM/YYYY"
+                          )}
+                        />
+                      </ListItem>
+                    ))}
+                  </AccordionDetails>
+                  <AccordionActions>
+                    <PrimaryButton
+                      title="Edit"
+                      clickHandler={() => {
+                        updateEditMistakeId(mistake.id);
+                        updateIsOpenUpdateMistakeDialog(true);
+                      }}
+                      style={{
                         borderColor: sharedColor.button.info,
                         color: sharedColor.button.info,
-                      },
-                    }}
-                  />
-                  <PrimaryButton
-                    title="Delete"
-                    clickHandler={() => {
-                      removeMistake(mistake.id);
-                    }}
-                    style={{
-                      borderColor: sharedColor.button.alert,
-                      color: sharedColor.button.alert,
-                      "&:hover": {
+                        "&:hover": {
+                          borderColor: sharedColor.button.info,
+                          color: sharedColor.button.info,
+                        },
+                      }}
+                    />
+                    <PrimaryButton
+                      title="Delete"
+                      clickHandler={() => {
+                        removeMistake(mistake.id);
+                      }}
+                      style={{
                         borderColor: sharedColor.button.alert,
                         color: sharedColor.button.alert,
-                      },
-                    }}
-                  />
-                </AccordionActions>
-              </Accordion>
-            );
-          })}
+                        "&:hover": {
+                          borderColor: sharedColor.button.alert,
+                          color: sharedColor.button.alert,
+                        },
+                      }}
+                    />
+                  </AccordionActions>
+                </Accordion>
+              );
+            })}
           <Pagination
             count={page}
             page={selectivePage}
@@ -303,6 +307,7 @@ const Home = () => {
         setOpen={setConfirmDelete}
         deleteHandler={() => confirmDeleteHandler()}
       />
+      <UpdateMistakeDialog />
     </Box>
   );
 };

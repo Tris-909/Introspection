@@ -5,6 +5,7 @@ import RecordMistakeDialog from "./dialogs/RecordMistakeDialog";
 import TextFieldPassword from "./TextFieldPassword";
 import ConfirmDeleteDialog from "./dialogs/ConfirmDeleteDialog";
 import ManageCategoriesDialog from "./dialogs/ManageCategoriesDialog";
+import UpdateMistakeDialog from "./dialogs/UpdateMistakeDialog";
 
 export {
   AuthenticateDialog,
@@ -14,4 +15,5 @@ export {
   GreetingDialog,
   ConfirmDeleteDialog,
   ManageCategoriesDialog,
+  UpdateMistakeDialog,
 };

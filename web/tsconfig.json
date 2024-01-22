@@ -2,7 +2,11 @@
   "extends": "./paths.json",
   "compilerOptions": {
     "target": "es2016",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -19,5 +23,7 @@
     "baseUrl": "./src",
     "rootDir": "./src"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }
