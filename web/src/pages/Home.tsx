@@ -23,6 +23,7 @@ import {
   GreetingDialog,
   ConfirmDeleteDialog,
   UpdateMistakeDialog,
+  RepetitionDialog,
 } from "molecules";
 import { PrimaryButton } from "atoms";
 import dayjs from "dayjs";
@@ -44,6 +45,7 @@ const Home = () => {
     updateMistakes,
     updateIsOpenUpdateMistakeDialog,
     updateEditMistakeId,
+    updateIsOpenAddRepetitionDialog,
   } = useAppStore();
 
   // Component Context
@@ -255,6 +257,21 @@ const Home = () => {
                   </AccordionDetails>
                   <AccordionActions>
                     <PrimaryButton
+                      title="Repeat"
+                      clickHandler={() => {
+                        updateEditMistakeId(mistake.id);
+                        updateIsOpenAddRepetitionDialog(true);
+                      }}
+                      style={{
+                        borderColor: sharedColor.button.warning,
+                        color: sharedColor.button.warning,
+                        "&:hover": {
+                          borderColor: sharedColor.button.warning,
+                          color: sharedColor.button.warning,
+                        },
+                      }}
+                    />
+                    <PrimaryButton
                       title="Edit"
                       clickHandler={() => {
                         updateEditMistakeId(mistake.id);
@@ -308,6 +325,7 @@ const Home = () => {
         deleteHandler={() => confirmDeleteHandler()}
       />
       <UpdateMistakeDialog />
+      <RepetitionDialog />
     </Box>
   );
 };

@@ -6,6 +6,7 @@ import TextFieldPassword from "./TextFieldPassword";
 import ConfirmDeleteDialog from "./dialogs/ConfirmDeleteDialog";
 import ManageCategoriesDialog from "./dialogs/ManageCategoriesDialog";
 import UpdateMistakeDialog from "./dialogs/UpdateMistakeDialog";
+import RepetitionDialog from "./dialogs/RepetitionDialog";
 
 export {
   AuthenticateDialog,
@@ -16,4 +17,5 @@ export {
   ConfirmDeleteDialog,
   ManageCategoriesDialog,
   UpdateMistakeDialog,
+  RepetitionDialog,
 };

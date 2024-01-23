@@ -13,8 +13,6 @@ import { useAppStore } from "contexts";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const RecordMistakeSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -138,7 +136,7 @@ const UpdateMistakeForm = ({
           />
         </FormControl>
         <DatePicker
-          label="Controlled picker"
+          label="Created At"
           value={selectedDate}
           onChange={(newValue: any) => {
             setSelectDate(dayjs(newValue).valueOf());

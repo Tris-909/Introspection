@@ -23,6 +23,10 @@ interface AppStoreState {
   updateIsOpenUpdateMistakeDialog: (newValue: boolean) => void;
   editMistakeId: string;
   updateEditMistakeId: (newValue: string) => void;
+
+  // Open / Close `AddRepetition` Dialog
+  isOpenAddRepetitionDialog: boolean;
+  updateIsOpenAddRepetitionDialog: (newValue: boolean) => void;
 }
 
 export const useAppStore = create<AppStoreState>((set) => ({
@@ -46,4 +50,8 @@ export const useAppStore = create<AppStoreState>((set) => ({
 
   editMistakeId: "",
   updateEditMistakeId: (newValue) => set({ editMistakeId: newValue }),
+
+  isOpenAddRepetitionDialog: false,
+  updateIsOpenAddRepetitionDialog: (newValue) =>
+    set({ isOpenAddRepetitionDialog: newValue }),
 }));

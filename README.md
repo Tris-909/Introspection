@@ -51,3 +51,8 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Allow user to delete tag then update all related `Mistakes` to remove that tag from them
   - Allow user to create new tag
   - Move Create tag logic from RecordMistakeForm to ManageCategoriesDialog
+- (22/01/2024) ->
+  - Allow user to edit `Mistake`
+  - Major re-factor codes about Zustand uses
+- (23/01/2024) ->
+  - Allow users to record `Repetition` for a Mistake
