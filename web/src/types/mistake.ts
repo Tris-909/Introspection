@@ -4,6 +4,7 @@ export interface Mistake {
   title: string;
   description: string;
   repetitions: {
+    id: string;
     title: string;
     createdAt: number;
   }[];

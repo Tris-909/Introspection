@@ -27,6 +27,12 @@ interface AppStoreState {
   // Open / Close `AddRepetition` Dialog
   isOpenAddRepetitionDialog: boolean;
   updateIsOpenAddRepetitionDialog: (newValue: boolean) => void;
+
+  // Switch between AddRepetition and EditRepetition Form
+  isEditRepetition: boolean;
+  updateIsEditRepetition: (newValue: boolean) => void;
+  editRepetitionId: string;
+  updateEditRepetitionId: (newValue: string) => void;
 }
 
 export const useAppStore = create<AppStoreState>((set) => ({
@@ -54,4 +60,10 @@ export const useAppStore = create<AppStoreState>((set) => ({
   isOpenAddRepetitionDialog: false,
   updateIsOpenAddRepetitionDialog: (newValue) =>
     set({ isOpenAddRepetitionDialog: newValue }),
+
+  isEditRepetition: false,
+  updateIsEditRepetition: (newValue) => set({ isEditRepetition: newValue }),
+
+  editRepetitionId: "",
+  updateEditRepetitionId: (newValue) => set({ editRepetitionId: newValue }),
 }));

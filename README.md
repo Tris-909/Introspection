@@ -58,3 +58,4 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Allow users to record `Repetition` for a `Mistake`
 - (24/01/2024) ->
   - Allow users to remove `Repetition` within a `Mistake`
+  - Allow users to edit a `Repetition` within a `Mistake`

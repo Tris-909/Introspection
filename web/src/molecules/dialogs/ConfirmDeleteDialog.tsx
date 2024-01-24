@@ -25,7 +25,7 @@ const ConfirmDeleteDialog = ({
     >
       <Box display={"flex"} flexDirection={"column"}>
         <DialogContentText color="black">
-          Are you sure you want to delete this mistake permanently ?
+          Are you sure you want to delete this permanently ?
         </DialogContentText>
         <PrimaryButton
           title="Delete Permanently"

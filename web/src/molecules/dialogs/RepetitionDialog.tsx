@@ -11,12 +11,13 @@ const RepetitionDialog = () => {
     updateIsOpenAddRepetitionDialog,
     mistakes,
     updateMistakes,
+    isEditRepetition,
   } = useAppStore();
 
-  const addRepetitionHandler = async (
+  const repetitionHandler = async (
     updateId: string,
     data: {
-      repetitions: { title: string; createdAt: number }[];
+      repetitions: { id: string; title: string; createdAt: number }[];
     }
   ) => {
     let editMistake = mistakes.filter((mistake) => mistake.id === updateId)[0];
@@ -38,18 +39,20 @@ const RepetitionDialog = () => {
     });
 
     sendCustomNotification({
-      message: "Adding a repetition successfully",
+      message: isEditRepetition
+        ? "Edit a repetition successfully"
+        : "Adding a repetition successfully",
       type: ToastTypes.success,
     });
   };
 
   return (
     <CustomDialog
-      title={"Add Repetition"}
+      title={isEditRepetition ? "Edit Repetition" : "Add Repetition"}
       open={isOpenAddRepetitionDialog}
       setOpen={updateIsOpenAddRepetitionDialog}
     >
-      <RepetitionForm addRepetitionHandler={addRepetitionHandler} />
+      <RepetitionForm repetitionHandler={repetitionHandler} />
     </CustomDialog>
   );
 };

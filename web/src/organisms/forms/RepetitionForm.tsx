@@ -6,41 +6,71 @@ import { PrimaryButton } from "atoms";
 import { useAppStore } from "contexts";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
+import { v4 } from "uuid";
 
 const AddRepetitionSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
 });
 
 const RepetitionForm = ({
-  addRepetitionHandler,
+  repetitionHandler,
 }: {
-  addRepetitionHandler: (
+  repetitionHandler: (
     updateId: string,
     data: {
-      repetitions: { title: string; createdAt: number }[];
+      repetitions: { id: string; title: string; createdAt: number }[];
     }
   ) => void;
 }) => {
-  const { editMistakeId, mistakes, updateIsOpenAddRepetitionDialog } =
-    useAppStore();
+  const {
+    editMistakeId,
+    mistakes,
+    updateIsOpenAddRepetitionDialog,
+    isEditRepetition,
+    editRepetitionId,
+  } = useAppStore();
+
   const editMistake = mistakes.filter(
     (mistake) => mistake.id === editMistakeId
   )[0];
-  const [selectedDate, setSelectDate] = React.useState<number | Dayjs>(dayjs());
+  const editRepetition = editMistake.repetitions.filter(
+    (repetition) => repetition.id === editRepetitionId
+  )[0];
+  const [selectedDate, setSelectDate] = React.useState<number | Dayjs>(
+    isEditRepetition ? dayjs(editRepetition.createdAt) : dayjs()
+  );
 
   const formik = useFormik({
     initialValues: {
-      title: "",
+      title: isEditRepetition ? editRepetition.title : "",
     },
     validationSchema: AddRepetitionSchema,
     onSubmit: async (values): Promise<void> => {
       const { title } = values;
       if (selectedDate) {
-        addRepetitionHandler(editMistakeId, {
-          repetitions: [
-            { title, createdAt: selectedDate.valueOf() },
-            ...editMistake.repetitions,
-          ],
+        let currentEditRepetitions = editMistake.repetitions;
+
+        if (isEditRepetition) {
+          const newRepetition = {
+            ...editRepetition,
+            title: title,
+            createdAt: selectedDate.valueOf(),
+          };
+          const repetitionIndex = currentEditRepetitions.findIndex(
+            (repetition) => repetition.id === editRepetitionId
+          );
+          currentEditRepetitions[repetitionIndex] = newRepetition;
+        }
+
+        const newAddedRepetitions = [
+          { id: v4(), title, createdAt: selectedDate.valueOf() },
+          ...editMistake.repetitions,
+        ];
+
+        repetitionHandler(editMistakeId, {
+          repetitions: isEditRepetition
+            ? currentEditRepetitions
+            : newAddedRepetitions,
         });
       }
     },

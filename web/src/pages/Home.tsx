@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Box,
@@ -27,14 +27,15 @@ import {
   RepetitionDialog,
 } from "molecules";
 import { PrimaryButton } from "atoms";
-import dayjs from "dayjs";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { DocumentSnapshot, DocumentData } from "firebase/firestore";
 import { sharedColor } from "consts";
 import { Mistake, Condition } from "types";
 import { sendCustomNotification, ToastTypes } from "utils";
+import dayjs from "dayjs";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 const Home = () => {
   // Global Context
@@ -47,6 +48,8 @@ const Home = () => {
     updateIsOpenUpdateMistakeDialog,
     updateEditMistakeId,
     updateIsOpenAddRepetitionDialog,
+    updateIsEditRepetition,
+    updateEditRepetitionId,
   } = useAppStore();
 
   // Component Context
@@ -156,34 +159,35 @@ const Home = () => {
     setDeleteMistakeId(id);
   };
 
-  const confirmDeleteHandler = async () => {
-    if (deleteMistakeId) {
-      // Delete document in Firestore
-      await deleteDocument({
-        collectionName: CollectionNames.ERRRORS,
-        id: deleteMistakeId,
-      });
+  const deleteMistakeHandler = async () => {
+    // Delete document in Firestore
+    await deleteDocument({
+      collectionName: CollectionNames.ERRRORS,
+      id: deleteMistakeId as string,
+    });
 
-      // Remove the mistake from local state
-      const newMistakesAfterDeletion = mistakes.filter(
-        (mistake) => mistake.id !== deleteMistakeId
-      );
-      updateMistakes(newMistakesAfterDeletion);
+    // Remove the mistake from local state
+    const newMistakesAfterDeletion = mistakes.filter(
+      (mistake) => mistake.id !== deleteMistakeId
+    );
+    updateMistakes(newMistakesAfterDeletion);
 
-      // Close confirm delete dialog
-      setConfirmDelete(false);
+    // Close confirm delete dialog
+    setConfirmDelete(false);
 
-      // Notify customer
-      sendCustomNotification({
-        message: "Delete mistake successfully",
-        type: ToastTypes.success,
-      });
-    }
+    // Notify customer
+    sendCustomNotification({
+      message: "Delete mistake successfully",
+      type: ToastTypes.success,
+    });
+
+    // Reset state
+    setDeleteMistakeId(null);
   };
 
   const deleteRepetitionHandler = async (
     mistakeId: string,
-    repetitionIndex: number
+    repetitionId: string
   ) => {
     // Update app state
     const mistakeIndex = mistakes.findIndex(
@@ -192,8 +196,9 @@ const Home = () => {
     const relatedMistake = mistakes.filter(
       (mistake) => mistake.id === mistakeId
     )[0];
-    let repetitionsOfMistake = relatedMistake.repetitions;
-    repetitionsOfMistake.splice(repetitionIndex, 1);
+    let repetitionsOfMistake = relatedMistake.repetitions.filter(
+      (repetition) => repetition.id !== repetitionId
+    );
     relatedMistake.repetitions = repetitionsOfMistake;
     mistakes[mistakeIndex] = relatedMistake;
     updateMistakes(mistakes);
@@ -212,6 +217,12 @@ const Home = () => {
       message: "Delete repetition of a mistake successfully",
       type: ToastTypes.success,
     });
+  };
+
+  const confirmDeleteHandler = async () => {
+    if (deleteMistakeId) {
+      deleteMistakeHandler();
+    }
   };
 
   return (
@@ -274,15 +285,35 @@ const Home = () => {
                       <ListItem
                         key={index}
                         secondaryAction={
-                          <IconButton
-                            edge="end"
-                            aria-label="delete"
-                            onClick={() => {
-                              deleteRepetitionHandler(mistake.id, index);
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
+                          <>
+                            <IconButton
+                              edge="end"
+                              aria-label="edit"
+                              onClick={() => {
+                                updateIsEditRepetition(true);
+                                updateEditMistakeId(mistake.id);
+                                updateEditRepetitionId(repetition.id);
+                                updateIsOpenAddRepetitionDialog(true);
+                              }}
+                              sx={{
+                                marginRight: 1,
+                              }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton
+                              edge="end"
+                              aria-label="delete"
+                              onClick={() => {
+                                deleteRepetitionHandler(
+                                  mistake.id,
+                                  repetition.id
+                                );
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </>
                         }
                         sx={{ borderTop: "1px solid #ccc" }}
                       >
@@ -362,7 +393,9 @@ const Home = () => {
       <ConfirmDeleteDialog
         open={confirmDeleteOpen}
         setOpen={setConfirmDelete}
-        deleteHandler={() => confirmDeleteHandler()}
+        deleteHandler={() => {
+          confirmDeleteHandler();
+        }}
       />
       <UpdateMistakeDialog />
       <RepetitionDialog />

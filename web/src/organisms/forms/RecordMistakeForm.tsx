@@ -12,6 +12,7 @@ import { v4 } from "uuid";
 import { PrimaryButton } from "atoms";
 import { useAppStore } from "contexts";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { Mistake } from "types";
 
 const RecordMistakeSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -21,18 +22,7 @@ const RecordMistakeSchema = Yup.object().shape({
 const RecordMistakeForm = ({
   recordMistakeHandler,
 }: {
-  recordMistakeHandler: (data: {
-    id: string;
-    userId: string;
-    title: string;
-    description: string;
-    tags: string[];
-    repetitions: {
-      title: string;
-      createdAt: number;
-    }[];
-    createdAt: number;
-  }) => void;
+  recordMistakeHandler: (data: Mistake) => void;
 }) => {
   const { user, updateIsOpenRecordMistakeForm } = useAppStore();
 
@@ -55,6 +45,7 @@ const RecordMistakeForm = ({
         tags: currentSelectedTags,
         repetitions: [
           {
+            id: v4(),
             title: "First time",
             createdAt: Date.now(),
           },
