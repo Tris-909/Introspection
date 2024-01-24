@@ -17,6 +17,7 @@ import {
   CollectionNames,
   getDocumentsByPagination,
   deleteDocument,
+  updateDocument,
 } from "databases/firestore";
 import { useAuthenticationStore, useAppStore } from "contexts";
 import {
@@ -180,6 +181,39 @@ const Home = () => {
     }
   };
 
+  const deleteRepetitionHandler = async (
+    mistakeId: string,
+    repetitionIndex: number
+  ) => {
+    // Update app state
+    const mistakeIndex = mistakes.findIndex(
+      (mistake) => mistake.id === mistakeId
+    );
+    const relatedMistake = mistakes.filter(
+      (mistake) => mistake.id === mistakeId
+    )[0];
+    let repetitionsOfMistake = relatedMistake.repetitions;
+    repetitionsOfMistake.splice(repetitionIndex, 1);
+    relatedMistake.repetitions = repetitionsOfMistake;
+    mistakes[mistakeIndex] = relatedMistake;
+    updateMistakes(mistakes);
+
+    // Update Repetition inside a Mistake in FireStore
+    await updateDocument({
+      collectionName: CollectionNames.ERRRORS,
+      id: mistakeId,
+      updatedData: {
+        repetitions: repetitionsOfMistake,
+      },
+    });
+
+    // Notify customer
+    sendCustomNotification({
+      message: "Delete repetition of a mistake successfully",
+      type: ToastTypes.success,
+    });
+  };
+
   return (
     <Box
       p={2}
@@ -240,7 +274,13 @@ const Home = () => {
                       <ListItem
                         key={index}
                         secondaryAction={
-                          <IconButton edge="end" aria-label="delete" disabled>
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            onClick={() => {
+                              deleteRepetitionHandler(mistake.id, index);
+                            }}
+                          >
                             <DeleteIcon />
                           </IconButton>
                         }

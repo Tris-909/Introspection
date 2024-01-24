@@ -55,4 +55,6 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Allow user to edit `Mistake`
   - Major re-factor codes about Zustand uses
 - (23/01/2024) ->
-  - Allow users to record `Repetition` for a Mistake
+  - Allow users to record `Repetition` for a `Mistake`
+- (24/01/2024) ->
+  - Allow users to remove `Repetition` within a `Mistake`
