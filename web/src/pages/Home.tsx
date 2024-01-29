@@ -231,11 +231,11 @@ const Home = () => {
       display={"flex"}
       flexDirection={isSmaller900px ? "column" : "row"}
     >
-      <Box width={isSmaller900px ? "100%" : "50%"}>
-        <Typography variant="h5" fontFamily={"Josefin Slab"} fontWeight={600}>
+      <Box width={isSmaller900px ? "100%" : "40%"}>
+        <Typography variant="h3" fontFamily={"Josefin Slab"} fontWeight={600}>
           {dayjs().format("DD/MM/YYYY")}
         </Typography>
-        <Typography variant="h5" fontFamily={"Josefin Slab"} fontWeight={600}>
+        <Typography variant="h4" fontFamily={"Josefin Slab"} fontWeight={600}>
           Hi {user?.name}, Welcome back, ready to own your mistakes ?
         </Typography>
         <Paper
@@ -280,7 +280,7 @@ const Home = () => {
                       <Typography> {mistake.description}</Typography>
                     </Box>
                   </AccordionSummary>
-                  <AccordionDetails>
+                  <AccordionDetails sx={{ maxHeight: 200, overflow: "auto" }}>
                     {mistake.repetitions.map((repetition, index) => (
                       <ListItem
                         key={index}
@@ -388,7 +388,7 @@ const Home = () => {
           />
         </Paper>
       </Box>
-      <Box width={isSmaller900px ? "100%" : "50%"} height={400}></Box>
+      <Box width={isSmaller900px ? "100%" : "60%"} height={400}></Box>
       <GreetingDialog open={open} setOpen={setOpen} />
       <ConfirmDeleteDialog
         open={confirmDeleteOpen}

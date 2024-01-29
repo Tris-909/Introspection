@@ -2,33 +2,33 @@ import { create } from "zustand";
 import { Mistake } from "types";
 
 interface AppStoreState {
-  // User entity in FireStore
+  // ? User entity in FireStore
   user: Record<string, any> | null;
   updateUser: (user: Record<string, any>) => void;
 
-  // Fetched Mistakes using certain `tags`
+  // ? Fetched Mistakes using certain `tags`
   mistakes: Mistake[];
   updateMistakes: (newMistakes: Mistake[]) => void;
 
-  // Open / Close `RecordMistake` Dialog
+  // ? Open / Close `RecordMistake` Dialog
   isOpenRecordMistakeForm: boolean;
   updateIsOpenRecordMistakeForm: (newValue: boolean) => void;
 
-  // Open / Close `ManageCategories` Dialog
+  // ? Open / Close `ManageCategories` Dialog
   isOpenManageCategoriesDialog: boolean;
   updateIsOpenManageCategoriesDialog: (newValue: boolean) => void;
 
-  // Open / Close `UpdateMistake` Dialog
+  // ? Open / Close `UpdateMistake` Dialog
   isOpenUpdateMistakeDialog: boolean;
   updateIsOpenUpdateMistakeDialog: (newValue: boolean) => void;
   editMistakeId: string;
   updateEditMistakeId: (newValue: string) => void;
 
-  // Open / Close `AddRepetition` Dialog
+  // ? Open / Close `AddRepetition` Dialog
   isOpenAddRepetitionDialog: boolean;
   updateIsOpenAddRepetitionDialog: (newValue: boolean) => void;
 
-  // Switch between AddRepetition and EditRepetition Form
+  // ? Switch between AddRepetition and EditRepetition Form
   isEditRepetition: boolean;
   updateIsEditRepetition: (newValue: boolean) => void;
   editRepetitionId: string;
