@@ -8,6 +8,6 @@ export interface Mistake {
     title: string;
     createdAt: number;
   }[];
-  tags: string[];
+  category: string;
   createdAt: number;
 }

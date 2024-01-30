@@ -17,6 +17,7 @@ import {
 import { db } from "databases/firebase";
 import { sendCustomNotification, ToastTypes } from "utils";
 import { Condition, QueryResult } from "types";
+import { Mistake, User } from "types";
 
 export enum CollectionNames {
   USERS = "users",
@@ -35,6 +36,7 @@ export const getDocumentById = async ({
     const docSnap = await getDoc(docRef);
     return docSnap.data();
   } catch (error) {
+    console.log("error", error);
     sendCustomNotification({
       message: "Something is wrong, please try again later",
       type: ToastTypes.error,
@@ -47,7 +49,7 @@ export const createDocument = async ({
   data,
 }: {
   collectionName: CollectionNames;
-  data: Record<string, unknown>;
+  data: Mistake | User;
 }) => {
   try {
     await setDoc(doc(db, collectionName, data.id as string), data);
@@ -192,6 +194,7 @@ export const getDocumentsByPagination = async ({
 
     return { items: items, cursor: lastDocument };
   } catch (error) {
+    console.log("error", error);
     sendCustomNotification({
       message: "Something is wrong, please try again later",
       type: ToastTypes.error,
