@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import { Mistake } from "types";
+import { Mistake, User } from "types";
 
 interface AppStoreState {
   // ? User entity in FireStore
-  user: Record<string, any> | null;
-  updateUser: (user: Record<string, any>) => void;
+  user: User | null;
+  updateUser: (user: User) => void;
 
   // ? Fetched Mistakes using certain `tags`
   mistakes: Mistake[];
@@ -37,7 +37,7 @@ interface AppStoreState {
 
 export const useAppStore = create<AppStoreState>((set) => ({
   user: null,
-  updateUser: (user: Record<string, any>) => set({ user: user }),
+  updateUser: (user: User) => set({ user: user }),
 
   mistakes: [],
   updateMistakes: (newMistakes: Mistake[]) => set({ mistakes: newMistakes }),

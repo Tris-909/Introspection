@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { DialogContentText, TextField, Typography, Box } from "@mui/material";
-import { useAuthenticationStore } from "contexts";
-import { CollectionNames, createDocument } from "databases/firestore";
+import { useAuthenticationStore, useAppStore } from "contexts";
+import {
+  CollectionNames,
+  createDocument,
+  getDocumentById,
+} from "databases/firestore";
 import CustomDialog from "./CustomDialog";
 import { PrimaryButton } from "atoms";
+import { User } from "types";
 
 const GreetingDialog = ({
   open,
@@ -12,6 +17,7 @@ const GreetingDialog = ({
   open: boolean;
   setOpen: (newValue: boolean) => void;
 }) => {
+  const { updateUser } = useAppStore();
   const { authUserInfo } = useAuthenticationStore();
   const [nameInput, setNameInput] = useState("");
   const [nameInputError, setNameInputError] = useState(false);
@@ -20,11 +26,19 @@ const GreetingDialog = ({
     await createDocument({
       collectionName: CollectionNames.USERS,
       data: {
-        id: authUserInfo?.uid,
+        id: authUserInfo!.uid,
         name: nameInput,
+        categories: ["Default"],
         createdAt: Date.now(),
-      },
+      } as User,
     });
+
+    const user = (await getDocumentById({
+      collectionName: CollectionNames.USERS,
+      id: authUserInfo!.uid,
+    })) as User;
+
+    updateUser(user);
   };
 
   return (

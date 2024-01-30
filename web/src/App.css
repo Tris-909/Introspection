@@ -1,0 +1,4 @@
+.blurred-background {
+  filter: blur(2px);
+  -webkit-filter: blur(9px);
+}

@@ -27,37 +27,36 @@ const ManageCategoriesDialog = () => {
     updateIsOpenManageCategoriesDialog,
   } = useAppStore();
 
-  const [tags, setTags] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [updateTag, setUpdateTag] = useState<string>("");
   const [isEdit, setIsEdit] = useState<string>("");
   const [createTag, setCreateTag] = useState<string>("");
   const [isCreate, setIsCreate] = useState<boolean>(false);
-  const notEligibleToCreateMoreTag = tags.length >= 10;
 
   useEffect(() => {
     if (user) {
-      const tagsWithoutDefault = user.tags.filter(
-        (tag: string) => tag !== "default"
+      const categoryWithoutDefault = user.categories.filter(
+        (category: string) => category !== "default"
       );
-      setTags(tagsWithoutDefault);
+      setCategories(categoryWithoutDefault);
     }
   }, [user]);
 
   const createTagHandler = async () => {
     if (createTag.length <= 20 && createTag.length >= 0) {
-      const newTagList = [...tags, createTag];
+      const newTagList = [...categories, createTag];
 
       // Update tags list in User entity FireStore
       await updateDocument({
         collectionName: CollectionNames.USERS,
-        id: user?.id,
+        id: user!.id,
         updatedData: {
-          tags: newTagList,
+          categories: newTagList,
         },
       });
 
       // Update app state
-      setTags(newTagList);
+      setCategories(newTagList);
       setIsCreate(false);
 
       // Notify customer
@@ -69,16 +68,16 @@ const ManageCategoriesDialog = () => {
   };
 
   const editTagHandler = async () => {
-    const updateIndex = tags.findIndex((tag) => tag === isEdit);
-    const copyTags = tags;
+    const updateIndex = categories.findIndex((category) => category === isEdit);
+    const copyTags = categories;
     copyTags[updateIndex] = updateTag;
 
     // Update tags list on user
     await updateDocument({
       collectionName: CollectionNames.USERS,
-      id: user?.id,
+      id: user!.id,
       updatedData: {
-        tags: copyTags,
+        categories: copyTags,
       },
     });
 
@@ -86,7 +85,7 @@ const ManageCategoriesDialog = () => {
     await updateRelatedMistakes(isEdit, updateTag);
 
     // Update tag list in app state
-    setTags(copyTags);
+    setCategories(copyTags);
     setIsEdit("");
 
     // Notify customer
@@ -98,13 +97,13 @@ const ManageCategoriesDialog = () => {
 
   const removeTagHandler = async (removedTag: string) => {
     // remove the tag from tag list from app state
-    const newTags = tags.filter((tag) => tag !== removedTag);
-    setTags(newTags);
+    const newTags = categories.filter((category) => category !== removedTag);
+    setCategories(newTags);
 
     // remove the tag from tag list from the user entity in firestore
     await updateDocument({
       collectionName: CollectionNames.USERS,
-      id: user?.id,
+      id: user!.id,
       updatedData: {
         tags: newTags,
       },
@@ -177,38 +176,43 @@ const ManageCategoriesDialog = () => {
       setOpen={updateIsOpenManageCategoriesDialog}
     >
       <Box display={"flex"} flexDirection={"column"}>
-        {tags.length > 0 &&
-          tags.map((tag: string, index: number) => {
-            if (tag) {
+        {categories.length > 0 &&
+          categories.map((category: string, index: number) => {
+            if (category) {
               return (
                 <ListItem
                   key={index}
                   secondaryAction={
                     <>
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        sx={{ mr: 1 }}
-                        onClick={() => {
-                          setIsEdit(tag);
-                          setUpdateTag(tag);
-                        }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => {
-                          removeTagHandler(tag);
-                        }}
-                      >
-                        <ClearIcon />
-                      </IconButton>
+                      {category !== "Default" && (
+                        <IconButton
+                          edge="end"
+                          aria-label="edit"
+                          sx={{ mr: 1 }}
+                          onClick={() => {
+                            setIsEdit(category);
+                            setUpdateTag(category);
+                          }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      )}
+
+                      {category !== "Default" && (
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => {
+                            removeTagHandler(category);
+                          }}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      )}
                     </>
                   }
                 >
-                  {isEdit === tag ? (
+                  {isEdit === category ? (
                     <ClickAwayListener
                       onClickAway={() => {
                         editTagHandler();
@@ -222,7 +226,7 @@ const ManageCategoriesDialog = () => {
                       />
                     </ClickAwayListener>
                   ) : (
-                    <ListItemText primary={tag} />
+                    <ListItemText primary={category} />
                   )}
                 </ListItem>
               );
@@ -247,25 +251,23 @@ const ManageCategoriesDialog = () => {
             />
           </ClickAwayListener>
         )}
-        {!notEligibleToCreateMoreTag && (
-          <PrimaryButton
-            title="Add new category"
-            clickHandler={() => {
-              setCreateTag("");
-              setIsCreate(true);
-            }}
-            style={{
+        <PrimaryButton
+          title="Add new category"
+          clickHandler={() => {
+            setCreateTag("");
+            setIsCreate(true);
+          }}
+          style={{
+            borderColor: sharedColor.button.info,
+            color: sharedColor.button.info,
+            "&:hover": {
               borderColor: sharedColor.button.info,
               color: sharedColor.button.info,
-              "&:hover": {
-                borderColor: sharedColor.button.info,
-                color: sharedColor.button.info,
-              },
-              alignSelf: "flex-end",
-              marginTop: 3,
-            }}
-          />
-        )}
+            },
+            alignSelf: "flex-end",
+            marginTop: 3,
+          }}
+        />
       </Box>
     </CustomDialog>
   );
