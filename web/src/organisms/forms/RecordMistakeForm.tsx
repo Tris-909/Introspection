@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
-import { useFormik } from "formik";
+import { FormikContext, useFormik } from "formik";
 import {
   FormControl,
   TextField,
   Box,
-  Checkbox,
-  FormControlLabel,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { v4 } from "uuid";
 import { PrimaryButton } from "atoms";
@@ -26,23 +27,21 @@ const RecordMistakeForm = ({
 }) => {
   const { user, updateIsOpenRecordMistakeForm } = useAppStore();
 
-  const [currentSelectedTags, setCurrentSelectedTags] = useState(["default"]);
-  const isSmaller900px = useMediaQuery("(max-width: 900px)");
-
   const formik = useFormik({
     initialValues: {
       title: "",
       description: "",
+      selectedCategory: "Default",
     },
     validationSchema: RecordMistakeSchema,
     onSubmit: async (values, { setValues }): Promise<void> => {
-      const { title, description } = values;
+      const { title, description, selectedCategory } = values;
       recordMistakeHandler({
         id: v4(),
         userId: user!.id,
         title,
         description,
-        tags: currentSelectedTags,
+        category: selectedCategory,
         repetitions: [
           {
             id: v4(),
@@ -53,14 +52,14 @@ const RecordMistakeForm = ({
         createdAt: Date.now(),
       });
 
-      setValues({ title: "", description: "" });
+      setValues({ title: "", description: "", selectedCategory: "Default" });
     },
   });
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box display={"flex"} flexDirection={"column"} width={"100%"}>
-        <FormControl sx={{ width: "100%", mb: 1 }}>
+        <FormControl sx={{ width: "100%", mb: 1, mt: 1 }}>
           <TextField
             variant="outlined"
             id="title"
@@ -73,42 +72,24 @@ const RecordMistakeForm = ({
             error={formik.touched.title && Boolean(formik.errors.title)}
           />
         </FormControl>
-        <Box
-          display={"flex"}
-          mb={2}
-          flexDirection={isSmaller900px ? "row" : "row"}
-          flexWrap={isSmaller900px ? "wrap" : "nowrap"}
-        >
-          {user &&
-            user.tags.map((tag: string) => (
-              <FormControlLabel
-                key={tag}
-                control={
-                  <Checkbox
-                    value={tag}
-                    defaultChecked={tag === "default"}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        const alreadyHaveThisTag =
-                          currentSelectedTags.includes(tag);
 
-                        if (!alreadyHaveThisTag) {
-                          setCurrentSelectedTags([...currentSelectedTags, tag]);
-                        }
-                      } else {
-                        const newCurrentSelectedTags =
-                          currentSelectedTags.filter(
-                            (tag) => tag !== e.target.value
-                          );
-                        setCurrentSelectedTags(newCurrentSelectedTags);
-                      }
-                    }}
-                  />
-                }
-                label={tag}
-              />
-            ))}
-        </Box>
+        <FormControl fullWidth sx={{ marginTop: 2, marginBottom: 2 }}>
+          <InputLabel>Category</InputLabel>
+          <Select
+            value={formik.values.selectedCategory}
+            label="Category"
+            onChange={(e) => {
+              formik.setFieldValue("selectedCategory", e.target.value);
+            }}
+          >
+            {user &&
+              user.categories.map((category: string) => (
+                <MenuItem value={category} key={category}>
+                  {category}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
 
         <FormControl sx={{ width: "100%", mb: 3 }}>
           <TextField

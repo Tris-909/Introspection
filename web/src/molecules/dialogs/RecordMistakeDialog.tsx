@@ -18,7 +18,7 @@ const RecordMistakeDialog = () => {
     try {
       await createDocument({
         collectionName: CollectionNames.ERRRORS,
-        data: data as any,
+        data: data,
       });
       updateMistakes([data, ...mistakes]);
       updateIsOpenRecordMistakeForm(false);

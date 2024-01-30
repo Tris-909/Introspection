@@ -5,12 +5,12 @@ import {
   FormControl,
   TextField,
   Box,
-  Checkbox,
-  FormControlLabel,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { PrimaryButton } from "atoms";
 import { useAppStore } from "contexts";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -27,44 +27,39 @@ const UpdateMistakeForm = ({
     data: {
       title: string;
       description: string;
-      tags: string[];
+      tags: string;
       createdAt: number;
     }
   ) => void;
 }) => {
-  const { editMistakeId, mistakes, updateIsOpenUpdateMistakeDialog } =
+  const { user, editMistakeId, mistakes, updateIsOpenUpdateMistakeDialog } =
     useAppStore();
   const editMistake = mistakes.filter(
     (mistake) => mistake.id === editMistakeId
   )[0];
-
-  const [currentSelectedTags, setCurrentSelectedTags] = useState(
-    editMistake.tags
-  );
   const [selectedDate, setSelectDate] = React.useState<number | Dayjs>(
     dayjs(editMistake.createdAt)
   );
-
-  const isSmaller900px = useMediaQuery("(max-width: 900px)");
 
   const formik = useFormik({
     initialValues: {
       title: editMistake.title,
       description: editMistake.description,
+      selectedCategory: editMistake.category,
     },
     validationSchema: RecordMistakeSchema,
     onSubmit: async (values, { setValues }): Promise<void> => {
-      const { title, description } = values;
+      const { title, description, selectedCategory } = values;
       if (selectedDate) {
         updateMistakeHandler(editMistakeId, {
           title,
           description,
-          tags: currentSelectedTags,
+          tags: selectedCategory,
           createdAt: selectedDate.valueOf() as number,
         });
       }
 
-      setValues({ title: "", description: "" });
+      setValues({ title: "", description: "", selectedCategory: "default" });
     },
   });
 
@@ -84,40 +79,23 @@ const UpdateMistakeForm = ({
             error={formik.touched.title && Boolean(formik.errors.title)}
           />
         </FormControl>
-        <Box
-          display={"flex"}
-          mb={2}
-          flexDirection={isSmaller900px ? "row" : "row"}
-          flexWrap={isSmaller900px ? "wrap" : "nowrap"}
-        >
-          {currentSelectedTags.map((tag: string) => (
-            <FormControlLabel
-              key={tag}
-              control={
-                <Checkbox
-                  value={tag}
-                  defaultChecked={true}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      const alreadyHaveThisTag =
-                        currentSelectedTags.includes(tag);
-
-                      if (!alreadyHaveThisTag) {
-                        setCurrentSelectedTags([...currentSelectedTags, tag]);
-                      }
-                    } else {
-                      const newCurrentSelectedTags = currentSelectedTags.filter(
-                        (tag) => tag !== e.target.value
-                      );
-                      setCurrentSelectedTags(newCurrentSelectedTags);
-                    }
-                  }}
-                />
-              }
-              label={tag}
-            />
-          ))}
-        </Box>
+        <FormControl fullWidth sx={{ marginTop: 2, marginBottom: 2 }}>
+          <InputLabel>Selected Category</InputLabel>
+          <Select
+            value={formik.values.selectedCategory}
+            label="Category"
+            onChange={(e) => {
+              formik.setFieldValue("selectedCategory", e.target.value);
+            }}
+          >
+            {user &&
+              user.categories.map((category: string) => (
+                <MenuItem value={category} key={category}>
+                  {category}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
         <FormControl sx={{ width: "100%", mb: 3 }}>
           <TextField
             variant="outlined"

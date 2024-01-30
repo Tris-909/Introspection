@@ -18,7 +18,7 @@ const UpdateMistakeDialog = () => {
     data: {
       title: string;
       description: string;
-      tags: string[];
+      tags: string;
       createdAt: number;
     }
   ) => {
