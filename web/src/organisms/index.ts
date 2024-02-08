@@ -4,6 +4,7 @@ import RecordMistakeForm from "./forms/RecordMistakeForm";
 import UpdateMistakeForm from "./forms/UpdateMistakeForm";
 import RepetitionForm from "./forms/RepetitionForm";
 import CustomAppBar from "./CustomAppBar";
+import MistakeListWithTag from "./mistakes/MistakeListWithTag";
 
 export {
   AuthenticationForm,
@@ -12,4 +13,5 @@ export {
   UpdateMistakeForm,
   CustomAppBar,
   RepetitionForm,
+  MistakeListWithTag,
 };
