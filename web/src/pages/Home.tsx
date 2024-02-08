@@ -12,6 +12,7 @@ import {
   ListItemText,
   IconButton,
   Button,
+  Skeleton,
 } from "@mui/material";
 import {
   getDocumentById,
@@ -65,6 +66,7 @@ const Home = () => {
     DocumentData
   > | null>(null);
   const [activeTag, setActiveTag] = useState<string>("Default");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Styles
   const isSmaller900px = useMediaQuery("(max-width: 900px)");
@@ -112,6 +114,7 @@ const Home = () => {
   }, [activeTag]);
 
   const queryMistakesByTags = async () => {
+    setIsLoading(true);
     const queryConditions: Condition[] = [
       {
         field: "userId",
@@ -151,8 +154,10 @@ const Home = () => {
         numberOfPages = Math.ceil(newMistakesArr.length / 3);
       }
       setPage(numberOfPages);
+      setIsLoading(false);
     } catch (error) {
       console.log("error", error);
+      setIsLoading(false);
     }
   };
 
@@ -295,144 +300,168 @@ const Home = () => {
               alignItems: "center",
             }}
           >
-            {mistakes
-              .slice(selectivePage * 3 - 3, selectivePage * 3)
-              .map((mistake: Mistake) => {
-                return (
-                  <Accordion
-                    key={mistake.id}
-                    sx={{ width: "100%", marginBottom: 3 }}
-                    elevation={3}
-                  >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1-content"
-                      id="panel1-header"
-                    >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                        }}
+            {isLoading ? (
+              <>
+                <Skeleton
+                  variant="rectangular"
+                  animation="wave"
+                  width={"100%"}
+                  height={100}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  animation="wave"
+                  width={"100%"}
+                  height={100}
+                  sx={{
+                    marginTop: 3,
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                {mistakes
+                  .slice(selectivePage * 3 - 3, selectivePage * 3)
+                  .map((mistake: Mistake) => {
+                    return (
+                      <Accordion
+                        key={mistake.id}
+                        sx={{ width: "100%", marginBottom: 3 }}
+                        elevation={3}
                       >
-                        <Typography
-                          fontSize={26}
-                          fontFamily={"Josefin Slab"}
-                          fontWeight={600}
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1-content"
+                          id="panel1-header"
                         >
-                          {mistake.title}
-                        </Typography>
-                        <Typography> {mistake.description}</Typography>
-                      </Box>
-                    </AccordionSummary>
-                    <AccordionDetails sx={{ maxHeight: 200, overflow: "auto" }}>
-                      {mistake.repetitions.map((repetition, index) => (
-                        <ListItem
-                          key={index}
-                          secondaryAction={
-                            <>
-                              <IconButton
-                                edge="end"
-                                aria-label="edit"
-                                onClick={() => {
-                                  updateIsEditRepetition(true);
-                                  updateEditMistakeId(mistake.id);
-                                  updateEditRepetitionId(repetition.id);
-                                  updateIsOpenAddRepetitionDialog(true);
-                                }}
-                                sx={{
-                                  marginRight: 1,
-                                }}
-                              >
-                                <EditIcon />
-                              </IconButton>
-                              <IconButton
-                                edge="end"
-                                aria-label="delete"
-                                onClick={() => {
-                                  deleteRepetitionHandler(
-                                    mistake.id,
-                                    repetition.id
-                                  );
-                                }}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </>
-                          }
-                          sx={{ borderTop: "1px solid #ccc" }}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                            }}
+                          >
+                            <Typography
+                              fontSize={26}
+                              fontFamily={"Josefin Slab"}
+                              fontWeight={600}
+                            >
+                              {mistake.title}
+                            </Typography>
+                            <Typography> {mistake.description}</Typography>
+                          </Box>
+                        </AccordionSummary>
+                        <AccordionDetails
+                          sx={{ maxHeight: 200, overflow: "auto" }}
                         >
-                          <ListItemText
-                            primary={repetition.title}
-                            secondary={dayjs(repetition.createdAt).format(
-                              "DD/MM/YYYY"
-                            )}
+                          {mistake.repetitions.map((repetition, index) => (
+                            <ListItem
+                              key={index}
+                              secondaryAction={
+                                <>
+                                  <IconButton
+                                    edge="end"
+                                    aria-label="edit"
+                                    onClick={() => {
+                                      updateIsEditRepetition(true);
+                                      updateEditMistakeId(mistake.id);
+                                      updateEditRepetitionId(repetition.id);
+                                      updateIsOpenAddRepetitionDialog(true);
+                                    }}
+                                    sx={{
+                                      marginRight: 1,
+                                    }}
+                                  >
+                                    <EditIcon />
+                                  </IconButton>
+                                  <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    onClick={() => {
+                                      deleteRepetitionHandler(
+                                        mistake.id,
+                                        repetition.id
+                                      );
+                                    }}
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </>
+                              }
+                              sx={{ borderTop: "1px solid #ccc" }}
+                            >
+                              <ListItemText
+                                primary={repetition.title}
+                                secondary={dayjs(repetition.createdAt).format(
+                                  "DD/MM/YYYY"
+                                )}
+                              />
+                            </ListItem>
+                          ))}
+                        </AccordionDetails>
+                        <AccordionActions>
+                          <PrimaryButton
+                            title="Repeat"
+                            clickHandler={() => {
+                              updateEditMistakeId(mistake.id);
+                              updateIsOpenAddRepetitionDialog(true);
+                            }}
+                            style={{
+                              borderColor: sharedColor.button.warning,
+                              color: sharedColor.button.warning,
+                              "&:hover": {
+                                borderColor: sharedColor.button.warning,
+                                color: sharedColor.button.warning,
+                              },
+                            }}
                           />
-                        </ListItem>
-                      ))}
-                    </AccordionDetails>
-                    <AccordionActions>
-                      <PrimaryButton
-                        title="Repeat"
-                        clickHandler={() => {
-                          updateEditMistakeId(mistake.id);
-                          updateIsOpenAddRepetitionDialog(true);
-                        }}
-                        style={{
-                          borderColor: sharedColor.button.warning,
-                          color: sharedColor.button.warning,
-                          "&:hover": {
-                            borderColor: sharedColor.button.warning,
-                            color: sharedColor.button.warning,
-                          },
-                        }}
-                      />
-                      <PrimaryButton
-                        title="Edit"
-                        clickHandler={() => {
-                          updateEditMistakeId(mistake.id);
-                          updateIsOpenUpdateMistakeDialog(true);
-                        }}
-                        style={{
-                          borderColor: sharedColor.button.info,
-                          color: sharedColor.button.info,
-                          "&:hover": {
-                            borderColor: sharedColor.button.info,
-                            color: sharedColor.button.info,
-                          },
-                        }}
-                      />
-                      <PrimaryButton
-                        title="Delete"
-                        clickHandler={() => {
-                          removeMistake(mistake.id);
-                        }}
-                        style={{
-                          borderColor: sharedColor.button.alert,
-                          color: sharedColor.button.alert,
-                          "&:hover": {
-                            borderColor: sharedColor.button.alert,
-                            color: sharedColor.button.alert,
-                          },
-                        }}
-                      />
-                    </AccordionActions>
-                  </Accordion>
-                );
-              })}
-            {mistakes.length > 0 && (
-              <Pagination
-                count={page}
-                page={selectivePage}
-                onChange={async (e, value) => {
-                  onChangePage(value);
-                }}
-                sx={{
-                  marginTop: 2,
-                  marginBottom: 2,
-                }}
-              />
+                          <PrimaryButton
+                            title="Edit"
+                            clickHandler={() => {
+                              updateEditMistakeId(mistake.id);
+                              updateIsOpenUpdateMistakeDialog(true);
+                            }}
+                            style={{
+                              borderColor: sharedColor.button.info,
+                              color: sharedColor.button.info,
+                              "&:hover": {
+                                borderColor: sharedColor.button.info,
+                                color: sharedColor.button.info,
+                              },
+                            }}
+                          />
+                          <PrimaryButton
+                            title="Delete"
+                            clickHandler={() => {
+                              removeMistake(mistake.id);
+                            }}
+                            style={{
+                              borderColor: sharedColor.button.alert,
+                              color: sharedColor.button.alert,
+                              "&:hover": {
+                                borderColor: sharedColor.button.alert,
+                                color: sharedColor.button.alert,
+                              },
+                            }}
+                          />
+                        </AccordionActions>
+                      </Accordion>
+                    );
+                  })}
+                {mistakes.length > 0 && (
+                  <Pagination
+                    count={page}
+                    page={selectivePage}
+                    onChange={async (e, value) => {
+                      onChangePage(value);
+                    }}
+                    sx={{
+                      marginTop: 2,
+                      marginBottom: 2,
+                    }}
+                  />
+                )}
+              </>
             )}
           </Paper>
         </Box>
