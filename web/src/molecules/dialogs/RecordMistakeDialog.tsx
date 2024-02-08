@@ -20,7 +20,6 @@ const RecordMistakeDialog = () => {
         collectionName: CollectionNames.ERRRORS,
         data: data,
       });
-      updateMistakes([data, ...mistakes]);
       updateIsOpenRecordMistakeForm(false);
       sendCustomNotification({
         message: "Recording mistake successfully",

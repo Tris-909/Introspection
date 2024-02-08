@@ -64,7 +64,7 @@ const Home = () => {
     DocumentData,
     DocumentData
   > | null>(null);
-  const [activeTags, setActiveTags] = useState<string[]>(["Default"]);
+  const [activeTag, setActiveTag] = useState<string>("Default");
 
   // Styles
   const isSmaller900px = useMediaQuery("(max-width: 900px)");
@@ -106,10 +106,10 @@ const Home = () => {
   }, [mistakes]);
 
   useEffect(() => {
-    if (activeTags.length > 1) {
+    if (user) {
       queryMistakesByTags();
     }
-  }, [activeTags]);
+  }, [activeTag]);
 
   const queryMistakesByTags = async () => {
     const queryConditions: Condition[] = [
@@ -119,14 +119,12 @@ const Home = () => {
         value: user!.id,
       },
       {
-        field: "tags",
-        operator: "array-contains-any",
-        value: activeTags,
+        field: "category",
+        operator: "==",
+        value: activeTag,
       },
     ];
     const orderByField = "createdAt";
-
-    console.log("queryConditions", queryConditions);
 
     try {
       const { items, cursor } = await getDocumentsByPagination({
@@ -135,10 +133,7 @@ const Home = () => {
         orderByField: orderByField,
         lastVisibleDocument: nextCursor,
       });
-
       console.log("items", items);
-      console.log("cursor", cursor);
-
       const newMistakesArr = [...mistakes, ...(items as Mistake[])];
       updateMistakes(newMistakesArr);
       setNextCursor(cursor);
@@ -151,7 +146,7 @@ const Home = () => {
           orderByField: orderByField,
           lastVisibleDocument: cursor,
         });
-        console.log("nextItems", nextItems);
+        console.log("cursor items", items);
         const newMistakesArr = [...mistakes, ...items, ...nextItems];
         numberOfPages = Math.ceil(newMistakesArr.length / 3);
       }
@@ -240,6 +235,12 @@ const Home = () => {
     }
   };
 
+  const onChangeActiveTag = (category: string) => {
+    setActiveTag(category);
+    setNextCursor(null);
+    updateMistakes([]);
+  };
+
   return (
     <div className={open ? "blurred-background" : ""}>
       <Box
@@ -261,7 +262,7 @@ const Home = () => {
           </Typography>
           {user &&
             user.categories.map((category: string) => {
-              const isActive = activeTags.includes(category);
+              const isActive = activeTag === category;
               return (
                 <Button
                   key={category}
@@ -277,11 +278,7 @@ const Home = () => {
                       backgroundColor: isActive ? "black" : "white",
                     },
                   }}
-                  onClick={() => {
-                    if (isActive) {
-                    } else {
-                    }
-                  }}
+                  onClick={() => onChangeActiveTag(category)}
                 >
                   {category}
                 </Button>

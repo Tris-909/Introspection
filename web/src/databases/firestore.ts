@@ -179,10 +179,13 @@ export const getDocumentsByPagination = async ({
       ...conditions.map(({ field, operator, value }) =>
         where(field, operator, value)
       ),
-      orderBy(orderByField),
-      startAfter(lastVisibleDocument),
-      limit(pageSize)
+      orderBy(orderByField)
     );
+
+    if (lastVisibleDocument) {
+      q = query(q, startAfter(lastVisibleDocument));
+    }
+    q = query(q, limit(pageSize));
 
     const querySnapshot = await getDocs(q);
     const lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
