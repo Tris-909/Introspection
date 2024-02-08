@@ -61,3 +61,10 @@ Introspection is a web based and mobile app for users to record their mistakes, 
   - Allow users to edit a `Repetition` within a `Mistake`
 - (29/01/2024) ->
   - Allow user to scroll through the list of `Repetition` within a `Mistake`
+- (30/01/2024) ->
+  - Update schema for `Mistake` from `tags` to `category`
+  - Update schema for `User` from `tags` to `categories`, Making sure you can only have one tag on each `Mistake`
+  - Update related components to fit the new schema
+- (08/02/2024) ->
+  - Adding loading state skeleton for `Mistakes`
+  - Major refactor codes for `Mistakes` following atomic design pattern
